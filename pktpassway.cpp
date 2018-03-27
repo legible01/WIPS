@@ -1,15 +1,14 @@
 #include <iostream>
 
 #include "pktpassway.h"
+#include "listload.h"
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
-    //anyway. this part is one of
-
-   // if(correctDev)
-
+    listLoad tt;
+    tt.getDevList();
 
     return 0;
 }

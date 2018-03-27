@@ -3,7 +3,12 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 
-SOURCES += main.cpp
+SOURCES += \
+    listload.cpp \
+    pktpassway.cpp
 
 HEADERS += \
-    pktpassway.h
+    pktpassway.h \
+    listload.h
+
+LIBS += -lpcap
