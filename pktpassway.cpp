@@ -1,58 +1,71 @@
 #include <iostream>
-#include <ctypes>
+
+//#include <ctypes>
 
 #include "pktpassway.h"
 #include "listload.h"
+#include "dbmanage.h"
+#define PROMISCUOUS 1
+#define NONPROMISCUOUS 0
 
 using namespace std;
 
 char *correct_dev(int argu_count,char *argu_vector);
-void packet_control(pcap_t * packet_descriptor,pcap_stat& stat);
+
 
 int main(int argc, char *argv[])
 {
     listLoad tt;
-    tt.getDevList();
-    
+    tt.GetDevList();
+    dbmanage t1;
 
-    char *dev =correct_dev(argc,argv[1]);
+
+    //get device name
 
     char errbuf[PCAP_ERRBUF_SIZE];
-    int flags = PROMISCUOUS;
+    char* dev = correct_dev(argc,argv[1]);
 
-    pcap_t *packet_descriptor = pcap_open_live(dev, BUFSIZ, flags, 300, errbuf);
-    struct pcap_stat stat;
-    if(packet_descriptor == NULL) {
+    pcap_t * pktDescrpt = pcap_open_live(dev, BUFSIZ, PROMISCUOUS, 0, errbuf);
+    if(pktDescrpt == NULL) {
         printf("%s\n",errbuf);
         exit(1);
-    }else{
-        packet_control(packet_descriptor,stat);
-
     }
 
+    int loopStat;
+    struct pcap_pkthdr *pktHdr;
+    const u_char *pktData;
+    while(true)
+    {
 
+        loopStat = pcap_next_ex(pktDescrpt, &pktHdr, &pktData);
+        //(void)pktHdr;//useless
+        //pcap_stats(packeDescrpt,&stat);//useless
+
+        switch(loopStat)
+        {
+            case 1:
+            //packet filtering
+            //int function(argvs)
+
+            case 0:
+                continue;//timeout check
+            case -1:
+                pcap_perror(pktDescrpt,"Packet data read error");
+                exit(1);
+            case -2:
+                pcap_perror(pktDescrpt,"Packet data read error");
+                exit(1);
+        }
+    }
     return 0;
 }
 
-char *correct_dev(int argu_count,char *argu_vector)
+char *correct_dev(int argCnt,char *argVector)
 {
-    if (argu_count != 2){
+    if (argCnt != 2){
         printf("use this form to use program\nProgramName DeviceName\n");
         exit(1);
     }
-    printf("Device : %s\n", argu_vector);
-    return argu_vector;
-}
-
-void packet_control(pcap_t * packet_descriptor,pcap_stat& stat)
-{
-    while((loopstatus = pcap_next_ex(packet_descriptor, &pkt_hdr, &pkt_data)) >= 0){//pkt_data 's adress
-       (void)pkt_hdr;//useless
-       pcap_stats(packet_descriptor,&stat);
-
-
-        if(loopstatus == 0)
-            continue;//timeout check
-        if(loopstatus == -1 || loopstatus == -2)
-            pcap_perror(packet_descriptor,"Packet data read error");
+    printf("Device : %s\n", argVector);
+    return argVector;
 }

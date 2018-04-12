@@ -5,10 +5,18 @@ CONFIG -= qt
 
 SOURCES += \
     listload.cpp \
-    pktpassway.cpp
+    pktpassway.cpp \
+    devsearch.cpp \
+    dbmanage.cpp
 
 HEADERS += \
     pktpassway.h \
-    listload.h
+    listload.h \
+    devsearch.h \
+    dbmanage.h
 
 LIBS += -lpcap
+LIBS +=-lmysqlclient
+
+
+
