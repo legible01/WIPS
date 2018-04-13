@@ -17,3 +17,13 @@ dbmanage::~dbmanage()
 {
     mysql_close(&mysql);
 }
+
+
+MYSQL_RES* dbmanage::dbQuery(char * qStr)
+{
+    //qStr = "SHOW TABLES"
+    mysql_query(&mysql,qStr);
+    res = mysql_store_result(&mysql);
+    return res
+
+}

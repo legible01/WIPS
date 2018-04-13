@@ -4,7 +4,8 @@
 
 #include "pktpassway.h"
 #include "listload.h"
-#include "dbmanage.h"
+//#include "dbmanage.h"
+#include "devsearch.h"
 #define PROMISCUOUS 1
 #define NONPROMISCUOUS 0
 
@@ -15,22 +16,23 @@ char *correct_dev(int argu_count,char *argu_vector);
 
 int main(int argc, char *argv[])
 {
-    listLoad tt;
-    tt.GetDevList();
-    dbmanage t1;
+
+    dbmanage wipsDB;
 
 
-    //get device name
-
-    char errbuf[PCAP_ERRBUF_SIZE];
+    //devCheck
     char* dev = correct_dev(argc,argv[1]);
-
+    char errbuf[PCAP_ERRBUF_SIZE];
     pcap_t * pktDescrpt = pcap_open_live(dev, BUFSIZ, PROMISCUOUS, 0, errbuf);
     if(pktDescrpt == NULL) {
         printf("%s\n",errbuf);
         exit(1);
     }
 
+    //database connect
+
+
+    //pkt recv
     int loopStat;
     struct pcap_pkthdr *pktHdr;
     const u_char *pktData;
@@ -64,6 +66,10 @@ char *correct_dev(int argCnt,char *argVector)
 {
     if (argCnt != 2){
         printf("use this form to use program\nProgramName DeviceName\n");
+        printf("available dev Lists\n");
+        devsearch t1;
+        t1.GetDevList();
+
         exit(1);
     }
     printf("Device : %s\n", argVector);
