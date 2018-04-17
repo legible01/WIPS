@@ -7,13 +7,16 @@ SOURCES += \
     listload.cpp \
     pktpassway.cpp \
     devsearch.cpp \
-    dbmanage.cpp
+    dbmanage.cpp \
+    main.cpp \
+    mac.cpp
 
 HEADERS += \
     pktpassway.h \
     listload.h \
     devsearch.h \
-    dbmanage.h
+    dbmanage.h \
+    mac.h
 
 LIBS += -lpcap
 LIBS +=-lmysqlclient

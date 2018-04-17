@@ -1,27 +1,25 @@
-#include <iostream>
-
-//#include <ctypes>
-
 #include "pktpassway.h"
-#include "listload.h"
-//#include "dbmanage.h"
-#include "devsearch.h"
-#define PROMISCUOUS 1
-#define NONPROMISCUOUS 0
+
 
 using namespace std;
 
-char *correct_dev(int argu_count,char *argu_vector);
+//char pktpassway::*correct_dev(int argu_count,char *argu_vector);
 
 
-int main(int argc, char *argv[])
+int pktPassWay::main(void)
 {
-
+    //database connect
     dbmanage wipsDB;
+    listLoad liatMan;
 
+    //query(dbMacField,query)
+    int dBMacFld = 0;
+    int stat =  liatMan.initTbl(wipsDB.dbQuery("SELECT hex(Tmac),number FROM test_table"),dBMacFld);
+    printf("thus");
 
     //devCheck
-    char* dev = correct_dev(argc,argv[1]);
+    //char* dev = correct_dev(argc,argv[1]);
+    char *dev = "wlan0";
     char errbuf[PCAP_ERRBUF_SIZE];
     pcap_t * pktDescrpt = pcap_open_live(dev, BUFSIZ, PROMISCUOUS, 0, errbuf);
     if(pktDescrpt == NULL) {
@@ -29,7 +27,7 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    //database connect
+
 
 
     //pkt recv
@@ -62,7 +60,7 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-char *correct_dev(int argCnt,char *argVector)
+char* pktPassWay::correct_dev(int argCnt,char *argVector)
 {
     if (argCnt != 2){
         printf("use this form to use program\nProgramName DeviceName\n");

@@ -19,11 +19,19 @@ dbmanage::~dbmanage()
 }
 
 
-MYSQL_RES* dbmanage::dbQuery(char * qStr)
+MYSQL_RES* dbmanage:: dbQuery(char * qStr)
 {
     //qStr = "SHOW TABLES"
-    mysql_query(&mysql,qStr);
-    res = mysql_store_result(&mysql);
-    return res
+    if(mysql_query(&mysql, qStr))
+    {
+        printf("%s\n", mysql_error(&mysql));
+        exit(1);
+    }
+    this->res = mysql_store_result(&mysql);
+    return this->res;
 
+}
+void dbmanage::dbFree(void)
+{
+    mysql_free_result(this->res);
 }

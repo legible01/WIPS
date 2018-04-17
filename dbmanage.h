@@ -26,6 +26,7 @@ public:
     dbmanage();
     ~dbmanage();
     MYSQL_RES* dbQuery(char * qStr);
+    void dbFree(void);
 
 };
 
