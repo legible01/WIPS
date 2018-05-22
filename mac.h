@@ -7,6 +7,11 @@
 #include <cstring>
 
 
+#include <map>
+#include <tuple>
+
+
+
 
 class mac
 {
@@ -34,6 +39,10 @@ public:
         //if()
     return *this;
     }
+    bool operator<(const mac sMac)   const{
+               return std::tie(macAddr[0],macAddr[1],macAddr[2],macAddr[3],macAddr[4],macAddr[5])<std::tie(sMac.macAddr[0],sMac.macAddr[1],sMac.macAddr[2],sMac.macAddr[3],sMac.macAddr[4],sMac.macAddr[5]);
+    }
+
 };
 
 #endif // MAC_H

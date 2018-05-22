@@ -9,14 +9,18 @@ SOURCES += \
     devsearch.cpp \
     dbmanage.cpp \
     main.cpp \
-    mac.cpp
+    mac.cpp \
+    deauth.cpp \
+    packframes.cpp
 
 HEADERS += \
     pktpassway.h \
     listload.h \
     devsearch.h \
     dbmanage.h \
-    mac.h
+    mac.h \
+    deauth.h \
+    packframes.h
 
 LIBS += -lpcap
 LIBS +=-lmysqlclient

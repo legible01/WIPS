@@ -4,7 +4,9 @@
 
 int main(int argc, char *argv[])
 {
-    printf("hellowordl");
+    printf("helloworld");
+    char a = 0xba;
+    printf("ba is %d",a);
     pktPassWay test;
     //need argc
     test.main();

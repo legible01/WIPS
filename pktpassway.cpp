@@ -46,6 +46,9 @@ int pktPassWay::main(void)
             case 1:
             //packet filtering
             //int function(argvs)
+            //checkflag = func1(pktDescrpt);
+                memList.getPktInfo((uint8_t*)pktData);
+
 
             case 0:
                 continue;//timeout check
@@ -73,3 +76,6 @@ char* pktPassWay::correct_dev(int argCnt,char *argVector)
     printf("Device : %s\n", argVector);
     return argVector;
 }
+
+
+
