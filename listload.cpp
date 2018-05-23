@@ -44,20 +44,53 @@ int listLoad:: initTbl(MYSQL_RES* lRes,int macField = -1)
 
 
 void listLoad:: getPktInfo(uint8_t* pktData){
-
+   //D uint8_t* rth_data = pktData+RTHLENGTH;
+   uint8_t* rssAdr = pktData+RTHLENGTH;
+   uint8_t* channelAdr = pktData+RTHLENGTH;
    rthFrame =  (packframes::rth *)pktData;
-   for(int temp=0;temp<32;temp++){
-       uint8_t tt1 = (uint8_t)rthFrame->rth_present_flg.pflg1[temp];
-       // = ntohl(tt1);
-       printf("\npresentFlag1 =  %02x\n",tt1);
+   int d_form=4;
+   int padding=0;
+   //D printf("\nchannel cur adr = %p\n",channelAdr);
+   for(int temp=0;temp<29;temp++){
+       if(rthFrame->rth_present_flg.pflg1[temp]== false){
+           continue;
+       }
+       else if(rthFrame->rth_present_flg.pflg1[temp]==true){
+           while((d_form % PFrame.pflg_allign[temp])!=0){
+
+               d_form+=1;
+               padding+=1;
+           }
+           if(temp<3){
+               //D printf("\nchan_tmp = %d, pading = %d size=%d\n",temp,padding,PFrame.pflg_size[temp]);
+               channelAdr=channelAdr+padding+PFrame.pflg_size[temp];
+               //D printf("\nchannel cur adr = %p\n",channelAdr);
+           }
+
+           d_form= d_form+PFrame.pflg_size[temp];
+           padding=0;
+           continue;
+       }
+
    }
+   rssAdr += (d_form-4);
+   infoForm.channel = ntohs((uint16_t)*channelAdr);
+   infoForm.rss = (char)*rssAdr;
+
+
+
+   //D printf("\n\n\n rth_data = %p \n rthdata is %02x\n",channelAdr,channelAdr[0]);
+   //D printf("\ncur rss_position = %p\n data is %02x %02x\n",rssAdr,rssAdr[0],rssAdr[1]);
+
+//-------------------rth_data_abstract_end--------------------
+
    //printf("\nsize of struct = %d\n",sizeof();
-   int pflg_index = 0;
+
    //while(pflg_index){
        //for(int temp;temp<4;temp++){
             //&cmp_v
        //}
-
+    //printf("\ntt\n");
 
   // }
    /* uint8_t test1 = (rthFrame->rth_present_flg.pflg1.TSFT);

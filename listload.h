@@ -8,12 +8,15 @@
 #include "dbmanage.h"
 #include "mac.h"
 #include "packframes.h"
+#include <arpa/inet.h>
 
 
 #define WHITEAP 1
 #define WHITESTATION 2
 #define BLACKAP 3
 #define BLACKSTATION 4
+
+#define RTHLENGTH   12
 
 
 
@@ -28,6 +31,7 @@ class listLoad
  //--------------------------get pkt info(rth+mac)
 
     //packframes pktForm;
+    packframes PFrame;
     packframes::rth* rthFrame;
     typedef struct recv_info{
         mac apMac;
@@ -35,6 +39,7 @@ class listLoad
         uint16_t channel;
         mac stationMac;
     }info;
+    info infoForm;
 
     typedef std::map<int,info>pkt_info;
     typedef std::map<int,info>::iterator pkt_info_iter;

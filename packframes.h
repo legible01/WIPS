@@ -73,35 +73,35 @@ public:
 
 /*flag_to_size_rth
     {
-        TSFT                0    size= 8 padding =4?
-        flags               1    size= 1 padding =0;
-        rate                2    size= 1 padding =0;
-        channel             3    size= 2(4) padding =0?
+        TSFT                0    size= 8 allign=8
+        flags               1    size= 1 allign=1;
+        rate                2    size= 1 allign=1
+        channel             3    size= 4 allign=2
 
-        fhss                4    size= 2 padding=?
-        antena signal       5    size= 1 padding =0;
-        antena noise        6    size= 1 padding =0;
-        lock quality        7    size= 2 padding =1?
+        fhss                4    size= 2 allign=???(2?)
+        antena signal       5    size= 1 allign=1;dbm
+        antena noise        6    size= 1 allign=1;
+        lock quality        7    size= 2 allign=2
 
-        tx attenuation      8    size= 2 padding =1?
-        db_tx_attenuation   9    size= 2 padding =1?
-        dbm_tx_power        10   size= 1 padding =0;
-        antena              11   size= 1 padding =0;
+        tx attenuation      8    size= 2 allign=2
+        db_tx_attenuation   9    size= 2 allign=2
+        dbm_tx_power        10   size= 1 allign=1
+        antena              11   size= 1 allign=1
 
-        db_antena_signal    12   size= 1 padding =0;
-        db_antena_noise     13   size= 1 padding =0;
-        rx_flags            14   size= 2 padding =1;
+        db_antena_signal    12   size= 1 allign=1
+        db_antena_noise     13   size= 1 allign=1
+        rx_flags            14   size= 2 allign=2
                             15
 
                             16
                             17
                             18
-        mcs                 19   size= 1(3) padding =0;
+        mcs                 19   size= 3 allign=1
 
-        mpdu                20   size= 4 padding =2?
-        vht                 21   size=12 padding =?
-        timestamp           22   size=12 padding = ?
-        vendor_namespace    30   size=6  padding=?
+        mpdu                20   size= 6 allign=4
+        vht                 21   size=12 allign=2
+        timestamp           22   size=12 allign=8
+        vendor_namespace    30   size=6  allign=2
 
 
         //uint8_t radiotap_ns_next;*
@@ -109,8 +109,10 @@ public:
         //uint8_t ext;*
         //* is need but don't need size?
     }rth_flag_size;*/
-        uint8_t pflg_allign[32]={8,1,1,2,2,1,1,2,2,2,1,1,1,1,2,0,0,0,0,3,0,0,0,0,6,12,12,0,0,0,6,0};
-                              //        4       8      12      16      20      24        28      32
+        int pflg_size[32]={8,1,1,4,2,1,1,2,2,2,1,1,1,1,2,0,0,0,0,3,6,12,12,0,0,0,0,0,0,0,6,0};
+                           //        4       8      12      16      20        24      28      32
+        int pflg_allign[32]={8,1,1,2,2,1,1,2,2,2,1,1,1,1,2,0,0,0,0,1,4,2,8,0,0,0,0,0,0,0,2,0};
+                             //        4       8      12      16      20      24      28      32
     typedef struct radiotap_hdr_present_flags{
         std::bitset<32> pflg1;
         std::bitset<32> pflg2;
