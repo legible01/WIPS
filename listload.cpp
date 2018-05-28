@@ -44,9 +44,10 @@ int listLoad:: initTbl(MYSQL_RES* lRes,int macField = -1)
 
 
 void listLoad:: getPktInfo(uint8_t* pktData){
-   //D uint8_t* rth_data = pktData+RTHLENGTH;
+   //uint8_t* rth_data = pktData+RTHLENGTH;
    uint8_t* rssAdr = pktData+RTHLENGTH;
    uint8_t* channelAdr = pktData+RTHLENGTH;
+
    rthFrame =  (packframes::rth *)pktData;
    int d_form=4;
    int padding=0;

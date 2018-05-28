@@ -47,9 +47,7 @@ int pktPassWay::main(void)
             //packet filtering
             //int function(argvs)
             //checkflag = func1(pktDescrpt);
-                memList.getPktInfo((uint8_t*)pktData);
-
-
+                pktFilter((uint8_t*)pktData);
             case 0:
                 continue;//timeout check
             case -1:
@@ -79,3 +77,43 @@ char* pktPassWay::correct_dev(int argCnt,char *argVector)
 
 
 
+void pktPassWay::pktFilter(uint8_t *pktData)
+{
+    //uint8_t*
+    usrfunc usrFunc(pktData);
+    //make reference
+    //printf("")
+    switch(usrFunc.frameCtrl->type){
+
+        case(0):
+            //D memList.getPktInfo(pktData);
+
+            switch(usrFunc.frameCtrl->subType){
+                case(8):
+                    usrFunc.fakeAp();
+                    //memList.getPktInfo(pktData);
+                    break;
+                case(10):
+                   //D memList.getPktInfo(pktData);
+                    break;
+
+            }
+        case(1):
+        //type is 1
+            printf("\n");
+            break;
+        case(2):
+            printf("\n");
+            break;
+        case(3):
+            printf("\n");
+            break;
+
+
+
+
+    }
+
+
+
+}

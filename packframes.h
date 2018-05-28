@@ -107,7 +107,7 @@ public:
         //uint8_t radiotap_ns_next;*
         //uint8_t Vendor_NS_next ;
         //uint8_t ext;*
-        //* is need but don't need size?
+        // is need but don't need size?
     }rth_flag_size;*/
         int pflg_size[32]={8,1,1,4,2,1,1,2,2,2,1,1,1,1,2,0,0,0,0,3,6,12,12,0,0,0,0,0,0,0,6,0};
                            //        4       8      12      16      20        24      28      32
@@ -132,6 +132,52 @@ public:
     }rth_data;
     //void
     //struct management frame
+//----------------80211 frame----------------------------
+
+
+typedef struct FrameCtrl
+{
+    uint8_t   protocolVer    : 2;
+    uint8_t   type           : 2;
+    uint8_t   subType        : 4;
+    uint8_t   toDs           : 1;
+    uint8_t   fromDs         : 1;
+    uint8_t   moreFlag       : 1;
+    uint8_t   retry          : 1;
+    uint8_t   powerMgmt      : 1;
+    uint8_t   moreData       : 1;
+    uint8_t   protectedFrame : 1;
+    uint8_t   order          : 1;
+}FC;
+
+struct ManagementFrame
+{
+           FC  frameCtrl;  //2 bytes
+           uint16_t   duration;   //2 bytes
+           uint8_t    addr1[6];   //6 bytes
+           uint8_t    addr2[6];   //6 bytes
+           uint8_t    addr3[6];   //6 bytes
+           uint16_t   seq_ctrl;   //2 bytes
+};
+
+struct BeaconFrameBody
+{
+    uint64_t  timestamp;
+    uint16_t  beaconInterval;
+    uint16_t  capacityInformation;
+};
+
+struct TagBody
+{
+    uint8_t   elementID;
+    uint8_t   tagLength;
+};
+
+struct WifiName
+{
+    uint8_t ssid[32];
+};
+//void fakeAp(const uint8_t *);
 
 
 #pragma pack(pop)
