@@ -14,34 +14,85 @@ listLoad::listLoad()
 
 
 }
+
 //basically macField = 0
 int listLoad:: initTbl(MYSQL_RES* lRes,int macField = -1)
 {
 
+    blkStruct={0};
     int fCnt = mysql_num_fields(lRes);
+    int rowNum = 0;
     while((row = mysql_fetch_row(lRes)))
     {
-        for(int cnt = 0; cnt<fCnt; cnt++)
-        {
-            if(cnt == macField)
-            {
-               char* intMac = row[0];
-               //rintf("tec=%s",tec);
-               tempMac = intMac;//MAC overload
+        rowNum = (int)strtol(row[0],NULL,10);
+        printf("num check1 is %d\n",rowNum);
+        convMac(0,row[1]);
+        blkStruct.channel = (int)strtol(row[2],NULL,10);
+        blkStruct.blockStat = (int)strtol(row[3],NULL,10);
+        convMac(1,row[4]);
+        blkStruct.apAuth = (int)strtol(row[5],NULL,10);
+        blkStruct.apCipher = (int)strtol(row[6],NULL,10);
+        blkStruct.apEnc = (int)strtol(row[7],NULL,10);
+        blkStruct.macType = (int)strtol(row[8],NULL,10);
+        printf("st test %02x %02x %02x %02x %02x %02x\n",blkStruct.apMac[0],blkStruct.apMac[1],blkStruct.apMac[2],blkStruct.apMac[3],blkStruct.apMac[4],blkStruct.apMac[5]);
+        printf("\n");
+
+        BlackList.insert(std::make_pair(rowNum,blkStruct));
 
 
-
-            }
-            printf("%12s",this->row[cnt]);
-            //std::cout << typeid(*row[1]).name() <<'\n';//debug
-        }
-            printf("\n");
+    }
+    blk_list::iterator it;
+    for(it = BlackList.begin();it !=BlackList.end();it++){
+        printf("first %d\n",it->first);
 
 
     }
     return 0;
 }
 
+void listLoad:: convMac(int macFlag,std::string recvMac){
+    //std::vector<char> cMac(recvMac.c_str(), recvMac.c_str() + recvMac.size() + 1);
+    //char cMac[12] = (char)recvMac[];
+    //printf("%s\n",cMac);
+    //char const *test1 = recvMac.c_str();
+    //char* test1;
+    //std::strcpy(test1, recvMac.c_str());
+    //char hexbyte[3] = {0,};
+    //int octets[sizeof(recvMac) / 2];
+    int arrCnt = 0;
+    if(recvMac.length() == 12)
+    {
+        if(macFlag == 0)//apMac
+        {
+            for(int ex = 0;ex<12;ex+=2 ){
+                std::string tempstr = recvMac.substr(ex,2);
+                uint8_t num1 = (uint8_t)strtol(tempstr.c_str(),NULL,16);
+                arrCnt = ex/2;
+                blkStruct.apMac[arrCnt] = num1;
+                //printf("ok %02x\n",blkStruct.apMac[arrCnt]);
+                }
+            //char *te1 = "90";
+           // printf("test %d\n",blkStruct.apMac[0]);
+            //int test3 = std::atoi("");
+
+            //printf("test2sdf %02x\n\n",num1);
+
+        }else if(macFlag == 1)//stationMac
+        {
+            for(int ex = 0;ex<12;ex+=2 ){
+                std::string tempstr = recvMac.substr(ex,2);
+                uint8_t num1 = (uint8_t)strtol(tempstr.c_str(),NULL,16);
+                arrCnt = ex/2;
+                blkStruct.stMac[arrCnt] = num1;
+                //printf("ok %02x\n",blkStruct.stMac[arrCnt]);
+                }
+
+        }
+    }//else{//not 12 length mac then
+        //uint8_t num1 = (uint8_t)strtol(recvMac.c_str(),NULL,16);
+   // }
+
+}
 
 void listLoad:: getPktInfo(uint8_t* pktData){
    //uint8_t* rth_data = pktData+RTHLENGTH;

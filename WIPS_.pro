@@ -12,8 +12,7 @@ SOURCES += \
     mac.cpp \
     deauth.cpp \
     packframes.cpp \
-    usrfunc.cpp \
-    clisocket.cpp
+    usrfunc.cpp
 
 HEADERS += \
     pktpassway.h \
@@ -24,7 +23,7 @@ HEADERS += \
     deauth.h \
     packframes.h \
     usrfunc.h \
-    clisocket.h
+    aaa.h
 
 LIBS += -lpcap
 LIBS +=-lmysqlclient

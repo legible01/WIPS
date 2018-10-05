@@ -1,4 +1,4 @@
-#include <cstdio>
+#include <stdio.h>
 #include <iostream>
 #include <list>
 #include <vector>
@@ -9,6 +9,10 @@
 #include "mac.h"
 #include "packframes.h"
 #include <arpa/inet.h>
+#include <string>
+#include <cstring>
+#include <stdlib.h>
+
 
 
 #define WHITEAP 1
@@ -33,6 +37,7 @@ class listLoad
     //packframes pktForm;
     packframes PFrame;
     packframes::rth* rthFrame;
+    #pragma pack(push,1)
     typedef struct recv_info{
         mac apMac;
         char rss;
@@ -40,7 +45,23 @@ class listLoad
         mac stationMac;
     }info;
     info infoForm;
+    typedef struct black_list{
+        uint8_t apMac[6];
+        int channel;
+        int blockStat;
+        uint8_t stMac[6];
+        int apAuth;
+        int apCipher;
+        int apEnc;
+        int macType;
 
+    }bList;
+    bList blkStruct;
+    #pragma pack(pop)
+    typedef std::map<int,bList>blk_list;
+    blk_list BlackList;
+    typedef std::map<int,bList>::iterator blk_list_iter;
+    blk_list_iter BlackIter;
     typedef std::map<int,info>pkt_info;
     typedef std::map<int,info>::iterator pkt_info_iter;
 //--------------------------------------------------
@@ -63,6 +84,7 @@ class listLoad
 
     public:
         listLoad();
+        void convMac(int macFlag,std::string recvMac);
         int initTbl(MYSQL_RES* lRes,int macField);
         void getPktInfo(uint8_t* pktData);
 

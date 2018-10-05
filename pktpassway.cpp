@@ -10,25 +10,23 @@ int pktPassWay::main(void)
 {
     //database connect
     dbmanage wipsDB;
-    listLoad liatMan;
+    listLoad listMan;
 
     //query(dbMacField,query)
     int dBMacFld = 0;
-    int stat =  liatMan.initTbl(wipsDB.dbQuery("SELECT hex(Tmac),number FROM test_table"),dBMacFld);
+    int stat =  listMan.initTbl(wipsDB.dbQuery("SELECT * FROM wips_black_blacklist"),dBMacFld);
+    //initTbl send wipsdb. query table
     printf("thus");
 
     //devCheck
     //char* dev = correct_dev(argc,argv[1]);
-    char *dev = "wlan0";
+    char *dev = "wlan1";
     char errbuf[PCAP_ERRBUF_SIZE];
     pcap_t * pktDescrpt = pcap_open_live(dev, BUFSIZ, PROMISCUOUS, 0, errbuf);
     if(pktDescrpt == NULL) {
         printf("%s\n",errbuf);
         exit(1);
     }
-
-
-
 
     //pkt recv
     int loopStat;

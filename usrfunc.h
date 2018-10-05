@@ -5,6 +5,7 @@
 #include <cstdint>
 
 #include "packframes.h"
+#include "aaa.h"
 
 
 
@@ -19,6 +20,9 @@ public:
 
     usrfunc(uint8_t *packet);
     void fakeAp(void);
+    void misconfigureAP (const uint8_t *data);
+    int Cipher(uint8_t cipher);
+    int Auth(uint8_t auth);
 
 };
 
