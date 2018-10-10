@@ -5,26 +5,27 @@ CONFIG -= qt
 
 SOURCES += \
     listload.cpp \
+    packframes.cpp \
+    usrfunc.cpp \
     pktpassway.cpp \
     devsearch.cpp \
     dbmanage.cpp \
     main.cpp \
     mac.cpp \
-    deauth.cpp \
-    packframes.cpp \
-    usrfunc.cpp
+    deauth.cpp
+
 
 HEADERS += \
-    pktpassway.h \
     listload.h \
+    packframes.h \
+    usrfunc.h \
+    pktpassway.h \
     devsearch.h \
     dbmanage.h \
     mac.h \
     deauth.h \
-    packframes.h \
-    usrfunc.h \
-    aaa.h
-
+    aaa.h \
+    wonsang.h
 LIBS += -lpcap
 LIBS +=-lmysqlclient
 

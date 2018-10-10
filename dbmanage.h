@@ -6,7 +6,7 @@
 #define WHITESTATION 2
 #define BLACKAP 3
 #define BLACKSTATION 4
-
+#pragma once
 
 class dbmanage
 {

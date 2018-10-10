@@ -4,7 +4,7 @@
 
 
 
-listLoad::listLoad()
+listload::listload()
 {
 //make map for dev list
 //accessList
@@ -16,10 +16,10 @@ listLoad::listLoad()
 }
 
 //basically macField = 0
-int listLoad:: initTbl(MYSQL_RES* lRes,int macField = -1)
+int listload:: initlist(MYSQL_RES* lRes,int lFlag)
 {
 
-    blkStruct={0};
+    bwStruct={0};
     int fCnt = mysql_num_fields(lRes);
     int rowNum = 0;
     while((row = mysql_fetch_row(lRes)))
@@ -27,30 +27,68 @@ int listLoad:: initTbl(MYSQL_RES* lRes,int macField = -1)
         rowNum = (int)strtol(row[0],NULL,10);
         printf("num check1 is %d\n",rowNum);
         convMac(0,row[1]);
-        blkStruct.channel = (int)strtol(row[2],NULL,10);
-        blkStruct.blockStat = (int)strtol(row[3],NULL,10);
+        bwStruct.channel = (int)strtol(row[2],NULL,10);
+        bwStruct.blockStat = (int)strtol(row[3],NULL,10);
         convMac(1,row[4]);
-        blkStruct.apAuth = (int)strtol(row[5],NULL,10);
-        blkStruct.apCipher = (int)strtol(row[6],NULL,10);
-        blkStruct.apEnc = (int)strtol(row[7],NULL,10);
-        blkStruct.macType = (int)strtol(row[8],NULL,10);
-        printf("st test %02x %02x %02x %02x %02x %02x\n",blkStruct.apMac[0],blkStruct.apMac[1],blkStruct.apMac[2],blkStruct.apMac[3],blkStruct.apMac[4],blkStruct.apMac[5]);
+        bwStruct.apAuth = (int)strtol(row[5],NULL,10);
+        bwStruct.apCipher = (int)strtol(row[6],NULL,10);
+        bwStruct.apEnc = (int)strtol(row[7],NULL,10);
+        bwStruct.macType = (int)strtol(row[8],NULL,10);
+        printf("st test %02x %02x %02x %02x %02x %02x\n",bwStruct.apMac[0],bwStruct.apMac[1],bwStruct.apMac[2],bwStruct.apMac[3],bwStruct.apMac[4],bwStruct.apMac[5]);
         printf("\n");
-
-        BlackList.insert(std::make_pair(rowNum,blkStruct));
-
+        if(lFlag == 10){
+            BlackList.insert(std::make_pair(rowNum,bwStruct));
+        }else if(lFlag == 11){
+            WhiteList.insert(std::make_pair(rowNum,bwStruct));
+        }
 
     }
-    blk_list::iterator it;
+    bw_list::iterator it;
     for(it = BlackList.begin();it !=BlackList.end();it++){
         printf("first %d\n",it->first);
 
 
     }
+    //printf("thie end\n\n");
     return 0;
 }
 
-void listLoad:: convMac(int macFlag,std::string recvMac){
+int listload:: initwht(MYSQL_RES* lRes)
+{
+
+    bwStruct={0};
+    int fCnt = mysql_num_fields(lRes);
+    int rowNum = 0;
+    while((row = mysql_fetch_row(lRes)))
+    {
+        rowNum = (int)strtol(row[0],NULL,10);
+        printf("num check1 is %d\n",rowNum);
+        convMac(0,row[1]);
+        bwStruct.channel = (int)strtol(row[2],NULL,10);
+        bwStruct.blockStat = (int)strtol(row[3],NULL,10);
+        convMac(1,row[4]);
+        bwStruct.apAuth = (int)strtol(row[5],NULL,10);
+        bwStruct.apCipher = (int)strtol(row[6],NULL,10);
+        bwStruct.apEnc = (int)strtol(row[7],NULL,10);
+        bwStruct.macType = (int)strtol(row[8],NULL,10);
+        printf("st test %02x %02x %02x %02x %02x %02x\n",bwStruct.apMac[0],bwStruct.apMac[1],bwStruct.apMac[2],bwStruct.apMac[3],bwStruct.apMac[4],bwStruct.apMac[5]);
+        printf("\n");
+
+        BlackList.insert(std::make_pair(rowNum,bwStruct));
+
+
+    }
+    bw_list::iterator it;
+    for(it = BlackList.begin();it !=BlackList.end();it++){
+        printf("first %d\n",it->first);
+
+
+    }
+    //printf("thie end\n\n");
+    return 0;
+}
+
+void listload:: convMac(int macFlag,std::string recvMac){
     //std::vector<char> cMac(recvMac.c_str(), recvMac.c_str() + recvMac.size() + 1);
     //char cMac[12] = (char)recvMac[];
     //printf("%s\n",cMac);
@@ -68,11 +106,11 @@ void listLoad:: convMac(int macFlag,std::string recvMac){
                 std::string tempstr = recvMac.substr(ex,2);
                 uint8_t num1 = (uint8_t)strtol(tempstr.c_str(),NULL,16);
                 arrCnt = ex/2;
-                blkStruct.apMac[arrCnt] = num1;
-                //printf("ok %02x\n",blkStruct.apMac[arrCnt]);
+                bwStruct.apMac[arrCnt] = num1;
+                //printf("ok %02x\n",bwStruct.apMac[arrCnt]);
                 }
             //char *te1 = "90";
-           // printf("test %d\n",blkStruct.apMac[0]);
+           // printf("test %d\n",bwStruct.apMac[0]);
             //int test3 = std::atoi("");
 
             //printf("test2sdf %02x\n\n",num1);
@@ -83,8 +121,8 @@ void listLoad:: convMac(int macFlag,std::string recvMac){
                 std::string tempstr = recvMac.substr(ex,2);
                 uint8_t num1 = (uint8_t)strtol(tempstr.c_str(),NULL,16);
                 arrCnt = ex/2;
-                blkStruct.stMac[arrCnt] = num1;
-                //printf("ok %02x\n",blkStruct.stMac[arrCnt]);
+                bwStruct.stMac[arrCnt] = num1;
+                //printf("ok %02x\n",bwStruct.stMac[arrCnt]);
                 }
 
         }
@@ -94,7 +132,7 @@ void listLoad:: convMac(int macFlag,std::string recvMac){
 
 }
 
-void listLoad:: getPktInfo(uint8_t* pktData){
+void listload:: getPktInfo(uint8_t* pktData){
    //uint8_t* rth_data = pktData+RTHLENGTH;
    uint8_t* rssAdr = pktData+RTHLENGTH;
    uint8_t* channelAdr = pktData+RTHLENGTH;
@@ -185,4 +223,7 @@ void listLoad:: getPktInfo(uint8_t* pktData){
 
 
 }
+listload::bw_list& listload::rtnBlkMap(){
 
+    return this->BlackList;
+}

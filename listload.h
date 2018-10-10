@@ -1,3 +1,4 @@
+#pragma once
 #include <stdio.h>
 #include <iostream>
 #include <list>
@@ -24,10 +25,10 @@
 
 
 
-class listLoad
+class listload
 {
 
-    private:
+    public:
     uint8_t cmp_v = 1;
     MYSQL_ROW row;
     mac tempMac;
@@ -45,7 +46,8 @@ class listLoad
         mac stationMac;
     }info;
     info infoForm;
-    typedef struct black_list{
+ //-------------blk----------------
+    typedef struct blk_wht_list{
         uint8_t apMac[6];
         int channel;
         int blockStat;
@@ -55,19 +57,24 @@ class listLoad
         int apEnc;
         int macType;
 
-    }bList;
-    bList blkStruct;
+
+
+    }bwList;
+    bwList bwStruct;
     #pragma pack(pop)
-    typedef std::map<int,bList>blk_list;
-    blk_list BlackList;
-    typedef std::map<int,bList>::iterator blk_list_iter;
-    blk_list_iter BlackIter;
+    typedef std::map<int,bwList>bw_list;
+    bw_list BlackList;
+    bw_list WhiteList;
+    //typedef std::map<int,bwList>::iterator blk_list_iter;
+    //blk_list_iter BlackIter;
     typedef std::map<int,info>pkt_info;
     typedef std::map<int,info>::iterator pkt_info_iter;
-//--------------------------------------------------
+//----------------------white----------------------
+
+//-----------------
 
     //MYSQL_RES *listRes;
-    typedef std::map<int,std::string> wApMap;
+   /* typedef std::map<int,std::string> wApMap;
     wApMap CipwAp;//int,string
     typedef std::map<int,std::string>::iterator wApIter;
 
@@ -78,15 +85,13 @@ class listLoad
     typedef std::map<int,std::string> bStMap;
     bStMap CipbAp;//int,string
     typedef std::map<int,std::string>::iterator bAPIter;
-
-
-
-
-    public:
-        listLoad();
+*/
+        listload();
         void convMac(int macFlag,std::string recvMac);
-        int initTbl(MYSQL_RES* lRes,int macField);
+        int initlist(MYSQL_RES* lRes,int lFlag);
+        int initwht(MYSQL_RES* lRes);
         void getPktInfo(uint8_t* pktData);
+        bw_list& rtnBlkMap();
 
 };
 

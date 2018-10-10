@@ -1,4 +1,6 @@
 #include "pktpassway.h"
+#define BLACKLISTFLAG 10
+#define WHITELISTFLAG 11
 
 
 using namespace std;
@@ -10,17 +12,18 @@ int pktPassWay::main(void)
 {
     //database connect
     dbmanage wipsDB;
-    listLoad listMan;
+    listload listMan;
 
     //query(dbMacField,query)
-    int dBMacFld = 0;
-    int stat =  listMan.initTbl(wipsDB.dbQuery("SELECT * FROM wips_black_blacklist"),dBMacFld);
+
+    int stat =  listMan.initlist(wipsDB.dbQuery("SELECT * FROM wips_black_blacklist"),BLACKLISTFLAG);
+    int stat1 =  listMan.initlist(wipsDB.dbQuery("SELECT * FROM wips_white_whitelist"),WHITELISTFLAG);
     //initTbl send wipsdb. query table
-    printf("thus");
+    printf("thus\n");
 
     //devCheck
     //char* dev = correct_dev(argc,argv[1]);
-    char *dev = "wlan1";
+    char *dev = "wlan3";
     char errbuf[PCAP_ERRBUF_SIZE];
     pcap_t * pktDescrpt = pcap_open_live(dev, BUFSIZ, PROMISCUOUS, 0, errbuf);
     if(pktDescrpt == NULL) {
@@ -32,6 +35,7 @@ int pktPassWay::main(void)
     int loopStat;
     struct pcap_pkthdr *pktHdr;
     const u_char *pktData;
+    printf("start while\n");
     while(true)
     {
 
@@ -41,11 +45,11 @@ int pktPassWay::main(void)
 
         switch(loopStat)
         {
-            case 1:
-            //packet filtering
-            //int function(argvs)
-            //checkflag = func1(pktDescrpt);
-                pktFilter((uint8_t*)pktData);
+        case 1:
+        {
+                pktFilter((uint8_t*)pktData,listMan);
+                break;
+        }
             case 0:
                 continue;//timeout check
             case -1:
@@ -56,6 +60,7 @@ int pktPassWay::main(void)
                 exit(1);
         }
     }
+    printf("end while\n");
     return 0;
 }
 
@@ -75,27 +80,35 @@ char* pktPassWay::correct_dev(int argCnt,char *argVector)
 
 
 
-void pktPassWay::pktFilter(uint8_t *pktData)
+void pktPassWay::pktFilter(uint8_t *pktData,listload& listMan1)
 {
     //uint8_t*
     usrfunc usrFunc(pktData);
+    //usrFunc.test_viewFunc(listMan1);
     //make reference
     //printf("")
     switch(usrFunc.frameCtrl->type){
-
-        case(0):
+        case(0):{
             //D memList.getPktInfo(pktData);
-
             switch(usrFunc.frameCtrl->subType){
                 case(8):
-                    usrFunc.fakeAp();
+                {
+                    usrFunc.test_viewFunc(listMan1);
+                    usrFunc.fakeAp(listMan1);
+                    printf("misconf\n");
+                    int aa;
+                    aa = usrFunc.misconfigureAP(listMan1);
                     //memList.getPktInfo(pktData);
                     break;
-                case(10):
+                    }
+                case(10):{
                    //D memList.getPktInfo(pktData);
                     break;
 
+                }
             }
+        break;
+        }
         case(1):
         //type is 1
             printf("\n");
