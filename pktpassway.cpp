@@ -16,10 +16,12 @@ int pktPassWay::main(void)
 
     //query(dbMacField,query)
 
+    printf("BLACKLIST ENROLL\n");
     int stat =  listMan.initlist(wipsDB.dbQuery("SELECT * FROM wips_black_blacklist"),BLACKLISTFLAG);
+    printf("WHITELIST ENROLL\n");
     int stat1 =  listMan.initlist(wipsDB.dbQuery("SELECT * FROM wips_white_whitelist"),WHITELISTFLAG);
     //initTbl send wipsdb. query table
-    printf("thus\n");
+    // debug printf("thus\n");
 
     //devCheck
     //char* dev = correct_dev(argc,argv[1]);
@@ -35,7 +37,7 @@ int pktPassWay::main(void)
     int loopStat;
     struct pcap_pkthdr *pktHdr;
     const u_char *pktData;
-    printf("start while\n");
+    printf("packets waiting...\n");
     while(true)
     {
 
@@ -84,20 +86,24 @@ void pktPassWay::pktFilter(uint8_t *pktData,listload& listMan1)
 {
     //uint8_t*
     usrfunc usrFunc(pktData);
+    printf("===========================PACKET CAPTURE===============================\n\n");
     //usrFunc.test_viewFunc(listMan1);
     //make reference
     //printf("")
     switch(usrFunc.frameCtrl->type){
         case(0):{
             //D memList.getPktInfo(pktData);
+
             switch(usrFunc.frameCtrl->subType){
                 case(8):
                 {
-                    usrFunc.test_viewFunc(listMan1);
-                    usrFunc.fakeAp(listMan1);
-                    printf("misconf\n");
+                    usrFunc.macCmp(listMan1);
+                    //usrFunc.test_viewFunc(listMan1);
+                    //usrFunc.fakeAp(listMan1);
+                    //printf("misconf\n");
                     int aa;
                     aa = usrFunc.misconfigureAP(listMan1);
+                    usrFunc.adhocFunc(listMan1);
                     //memList.getPktInfo(pktData);
                     break;
                     }

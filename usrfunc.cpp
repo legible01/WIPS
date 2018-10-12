@@ -132,6 +132,7 @@ int usrfunc::misconfigureAP(listload& listMan2)
 
 
     printf("--------------------------------\n");
+    printf("AP RULE CHECK\n\n");
 
     uint8_t apMac[6]; //BSS = AP MAC
     //printf("ok\n\n");
@@ -179,44 +180,44 @@ int usrfunc::misconfigureAP(listload& listMan2)
                             switch (rsn->pCSC)
                            {
                            case 1:
-                               printf("PairwiseCipherSuiteSelector OUI : %02x-%02x-%02x\n", rsn->pCSS.pOUI[0], rsn->pCSS.pOUI[1], rsn->pCSS.pOUI[2]);//PairwiseCipherSuiteSelector OUI
-                               printf("PairwiseCipherSuiteSelector TYPE : %02x\n", rsn->pCSS.pOUI[3]);//PairwiseCipherSuiteSelector OUISC);
+                               //printf("PairwiseCipherSuiteSelector OUI : %02x-%02x-%02x\n", rsn->pCSS.pOUI[0], rsn->pCSS.pOUI[1], rsn->pCSS.pOUI[2]);//PairwiseCipherSuiteSelector OUI
+                               //printf("PairwiseCipherSuiteSelector TYPE : %02x\n", rsn->pCSS.pOUI[3]);//PairwiseCipherSuiteSelector OUISC);
                                sM.pCSS[3] = rsn->pCSS.pOUI[3];
-                               printf("AKM OUI : %02x-%02x-%02x\n", rsn->aSS[0], rsn->aSS[1], rsn->aSS[2]);//AKM OUI ID=48 -> WPA-2
-                               printf("AKM TYPE : %02x\n",rsn->aSS[3]);//AKM TYPE ID=48 -> WPA-2
+                               //printf("AKM OUI : %02x-%02x-%02x\n", rsn->aSS[0], rsn->aSS[1], rsn->aSS[2]);//AKM OUI ID=48 -> WPA-2
+                               //printf("AKM TYPE : %02x\n",rsn->aSS[3]);//AKM TYPE ID=48 -> WPA-2
                                sM.aSS[3] = rsn->aSS[3];
                                sM.aSC[0] = rsn->aSC[0];
                                sM.aSC[1] = rsn->aSC[1];
                                break;
 
                            case 2:
-                               printf("PairwiseCipherSuiteSelector OUI : %02x-%02x-%02x\n", rsn->pCSS.pOUI[4], rsn->pCSS.pOUI[5], rsn->pCSS.pOUI[6]);//PairwiseCipherSuiteSelector OUI
-                               printf("PairwiseCipherSuiteSelector TYPE : %02x\n", rsn->pCSS.pOUI[7]);//PairwiseCipherSuiteSelector OUISC);
+                               //printf("PairwiseCipherSuiteSelector OUI : %02x-%02x-%02x\n", rsn->pCSS.pOUI[4], rsn->pCSS.pOUI[5], rsn->pCSS.pOUI[6]);//PairwiseCipherSuiteSelector OUI
+                               //printf("PairwiseCipherSuiteSelector TYPE : %02x\n", rsn->pCSS.pOUI[7]);//PairwiseCipherSuiteSelector OUISC);
                                sM.pCSS[3] = rsn->pCSS.pOUI[7];
-                               printf("AKM OUI : %02x-%02x-%02x\n", rsn->aSS[4], rsn->aSS[5], rsn->aSS[6]);//AKM OUI ID=48 -> WPA-2
-                               printf("AKM TYPE : %02x\n",rsn->aSS[7]);//AKM TYPE ID=48 -> WPA-2
+                               //printf("AKM OUI : %02x-%02x-%02x\n", rsn->aSS[4], rsn->aSS[5], rsn->aSS[6]);//AKM OUI ID=48 -> WPA-2
+                               //printf("AKM TYPE : %02x\n",rsn->aSS[7]);//AKM TYPE ID=48 -> WPA-2
                                sM.aSS[3] = rsn->aSS[7];
                                sM.aSC[0] = rsn->aSC[2];
                                sM.aSC[1] = rsn->aSC[3];
                                break;
 
                            case 3:
-                               printf("PairwiseCipherSuiteSelector OUI : %02x-%02x-%02x\n", rsn->pCSS.pOUI[8], rsn->pCSS.pOUI[9], rsn->pCSS.pOUI[10]);//PairwiseCipherSuiteSelector OUI
-                               printf("PairwiseCipherSuiteSelector TYPE : %02x\n", rsn->pCSS.pOUI[11]);//PairwiseCipherSuiteSelector OUISC);
+                               //printf("PairwiseCipherSuiteSelector OUI : %02x-%02x-%02x\n", rsn->pCSS.pOUI[8], rsn->pCSS.pOUI[9], rsn->pCSS.pOUI[10]);//PairwiseCipherSuiteSelector OUI
+                               //printf("PairwiseCipherSuiteSelector TYPE : %02x\n", rsn->pCSS.pOUI[11]);//PairwiseCipherSuiteSelector OUISC);
                                sM.pCSS[3] = rsn->pCSS.pOUI[11];
-                               printf("AKM OUI : %02x-%02x-%02x\n", rsn->aSS[8], rsn->aSS[9], rsn->aSS[10]);//AKM OUI ID=48 -> WPA-2
-                               printf("AKM TYPE : %02x\n",rsn->aSS[11]);//AKM TYPE ID=48 -> WPA-2
+                              // printf("AKM OUI : %02x-%02x-%02x\n", rsn->aSS[8], rsn->aSS[9], rsn->aSS[10]);//AKM OUI ID=48 -> WPA-2
+                               //printf("AKM TYPE : %02x\n",rsn->aSS[11]);//AKM TYPE ID=48 -> WPA-2
                                sM.aSS[3] = rsn->aSS[7];
                                sM.aSC[0] = rsn->aSC[4];
                                sM.aSC[1] = rsn->aSC[5];
                                break;
 
                            case 4:
-                               printf("PairwiseCipherSuiteSelector OUI : %02x-%02x-%02x\n", rsn->pCSS.pOUI[12], rsn->pCSS.pOUI[13], rsn->pCSS.pOUI[14]);//PairwiseCipherSuiteSelector OUI
-                               printf("PairwiseCipherSuiteSelector TYPE : %02x\n", rsn->pCSS.pOUI[15]);//PairwiseCipherSuiteSelector OUISC);
+                               //printf("PairwiseCipherSuiteSelector OUI : %02x-%02x-%02x\n", rsn->pCSS.pOUI[12], rsn->pCSS.pOUI[13], rsn->pCSS.pOUI[14]);//PairwiseCipherSuiteSelector OUI
+                               //printf("PairwiseCipherSuiteSelector TYPE : %02x\n", rsn->pCSS.pOUI[15]);//PairwiseCipherSuiteSelector OUISC);
                                sM.pCSS[3] = rsn->pCSS.pOUI[15];
-                               printf("AKM OUI : %02x-%02x-%02x\n", rsn->aSS[12], rsn->aSS[13], rsn->aSS[14]);//AKM OUI ID=48 -> WPA-2
-                               printf("AKM TYPE : %02x\n",rsn->aSS[15]);//AKM TYPE ID=48 -> WPA-2
+                               //printf("AKM OUI : %02x-%02x-%02x\n", rsn->aSS[12], rsn->aSS[13], rsn->aSS[14]);//AKM OUI ID=48 -> WPA-2
+                               //printf("AKM TYPE : %02x\n",rsn->aSS[15]);//AKM TYPE ID=48 -> WPA-2
                                sM.aSS[3] = rsn->aSS[15];
                                sM.aSC[0] = rsn->aSC[6];
                                sM.aSC[1] = rsn->aSC[7];
@@ -399,17 +400,17 @@ int usrfunc::misconfigureAP(listload& listMan2)
                 printf("WPA-2: %d\n", sF.enc);
                 //sF.enc = 20; //WPA-2 flsg:20
                 //printf("aaaaaaaaaaaaaaaaaaaaaaaaa\n");
-                printf("Group Cipher Suite Selector: %d\n",sM.gCSS[3]);//Group Cipher Suite Selector(multicast) Type
+                //printf("Group Cipher Suite Selector: %d\n",sM.gCSS[3]);//Group Cipher Suite Selector(multicast) Type
                 sF.groupCipher = Cipher(sM.gCSS[3]);
-                printf("Flag: %d\n", sF.groupCipher);
+               // printf("Flag: %d\n", sF.groupCipher);
 
-                printf("Pairwise Cipher Suite Selector: %d\n",sM.pCSS[3]);//Pairwise Cipher Suite Selector(unicast) Type
+               // printf("Pairwise Cipher Suite Selector: %d\n",sM.pCSS[3]);//Pairwise Cipher Suite Selector(unicast) Type
                 sF.pairwiseCipher = Cipher(sM.pCSS[3]);
-                printf("Flag: %d\n", sF.pairwiseCipher);
+               // printf("Flag: %d\n", sF.pairwiseCipher);
 
-                printf("AKM Suite Selector: %d\n",sM.aSS[3]);//Authentication and Key Management Type
+                //printf("AKM Suite Selector: %d\n",sM.aSS[3]);//Authentication and Key Management Type
                 sF.auth = Auth(sM.aSS[3]);
-                printf("Flag: %d\n", sF.auth);
+               /// printf("Flag: %d\n", sF.auth);
             }
 
             else if(sM.oUI[0] == 0x00 && sM.oUI[1] == 0x50 && sM.oUI[2] == 0xf2)//OUI 00-50-f2 -> WPA-1
@@ -424,11 +425,11 @@ int usrfunc::misconfigureAP(listload& listMan2)
 
                 printf("Pairwise Cipher Suite Selector: %d\n",sM.uCSS[3]);//Pairwise Cipher Suite Selector(unicast) Type
                 sF.pairwiseCipher = Cipher(sM.uCSS[3]);
-                printf("Flag: %d\n", sF.pairwiseCipher);
+                //printf("Flag: %d\n", sF.pairwiseCipher);
 
                 printf("AKM Suite Selector: %d\n",sM.aKMS[3]);//Authentication and Key Management Type
                 sF.auth = Auth(sM.aKMS[3]);
-                printf("Flag: %d\n", sF.auth);
+              //  printf("Flag: %d\n", sF.auth);
             }
 
             if(sM.wep == 1)//WEP
@@ -444,42 +445,88 @@ int usrfunc::misconfigureAP(listload& listMan2)
             }
 
             //###################TYPE########################
-            printf("##############################\n");
+            //printf("##############################\n");
             //ID:48 WPA-2
-            printf("GROUP:%d\n",sM.gCSS[3]);
-            printf("PAIRWISE COUNT:%02x-%02x\n",sM.pCSC);
+            //printf("GROUP:%d\n",sM.gCSS[3]);
+            //printf("PAIRWISE COUNT:%02x-%02x\n",sM.pCSC);
             printf("PAIRWISE:%d\n",sM.pCSS[3]);
-            printf("ASS COUNT:%02x-%02x\n",sM.aSC[0],sM.aSC[1]);
-            printf("ASS:%d\n",sM.aSS[3]);
+           // printf("ASS COUNT:%02x-%02x\n",sM.aSC[0],sM.aSC[1]);
+           // printf("ASS:%d\n",sM.aSS[3]);
             //ID:221 WPA-1
-            printf("MULTI:%d\n",sM.mCSS[3]);
-            printf("UNI COUNT:%02x-%02x\n",sM.uCSC);
-            printf("UNI:%d\n",sM.uCSS[3]);
-            printf("AKMS COUNT:%02x-%02x\n",sM.aKMC[0],sM.aKMC[1]);
-            printf("AKMS:%d\n",sM.aKMS[3]);
-            printf("##############################\n");
+           // printf("MULTI:%d\n",sM.mCSS[3]);
+           // printf("UNI COUNT:%02x-%02x\n",sM.uCSC);
+           // printf("UNI:%d\n",sM.uCSS[3]);
+           // printf("AKMS COUNT:%02x-%02x\n",sM.aKMC[0],sM.aKMC[1]);
+           // printf("AKMS:%d\n",sM.aKMS[3]);
+          //  printf("##############################\n");
 
-           printf("--------------------------------\n");
+          // printf("--------------------------------\n");
            //---------------compare listed datas <-> captured datas
            int cmpFlag = 0;
+           int macCmpFlag = 0;
            listload::bw_list::iterator it;
 
-            for(it = listMan2.BlackList.begin();it !=listMan2.BlackList.end();it++){
-               printf("view func first %d\n",it->first);
+            for(it = listMan2.WhiteList.begin();it !=listMan2.WhiteList.end();it++){
+               //printf("view func first %d\n",it->first);
                bwDatas = (listload::bwList)it->second;
-               printf("view func datas %d %02x %02x %02x %02x %02x %02x\n",bwDatas.apCipher,bwDatas.apMac[0],bwDatas.apMac[1],bwDatas.apMac[2],bwDatas.apMac[3],bwDatas.apMac[4],bwDatas.apMac[5]);
-               listSF.auth = 18;//bwDatas.apAuth;
-               listSF.enc = 20;//bwDatas.apEnc;
-               listSF.groupCipher = 15;//bwDatas.apCipher;
-               listSF.pairwiseCipher = 15;//bwDatas.apCipher;
-               cmpFlag = memcmp(&listSF,&sF,sizeof(SecurityFlag));
-               if(cmpFlag == 0){
-                   printf("value is zero\n");
-                   //start function(structure write and throw map,db)
-               }
-               printf("current cmp status is %d \n",cmpFlag);
+               macCmpFlag = memcmp(&(bwDatas.apMac),&(mF->addr3),6);
+               if(macCmpFlag == 0){
 
+               //printf("view func datas %d %02x %02x %02x %02x %02x %02x\n",bwDatas.apCipher,bwDatas.apMac[0],bwDatas.apMac[1],bwDatas.apMac[2],bwDatas.apMac[3],bwDatas.apMac[4],bwDatas.apMac[5]);
+                   listSF.auth = bwDatas.apAuth;
+                   listSF.enc = bwDatas.apEnc;
+                   listSF.groupCipher = bwDatas.apCipher;
+                   listSF.pairwiseCipher = bwDatas.apCipher;
+                   cmpFlag = memcmp(&listSF,&sF,sizeof(SecurityFlag));
+                   if(cmpFlag == 0){
+                       printf("LISTED AP RULE!(WHITE)\n");
+                       WHTFlag = true;
+                       break;
+                       //passpkt
+                   }
+               }
            }
+           printf("NOT LISTED AP RULE(WHITE)\n");
+           cmpFlag = 0;
+           macCmpFlag = 0;
+           if(WHTFlag == false){
+                //cmpFlag = 0;
+                //uint8_t cmpArray[6];
+                listload::bw_list::iterator it1;
+
+
+                //blk list!
+                for(it1 = listMan2.BlackList.begin();it1 !=listMan2.BlackList.end();it1++){
+                    bwDatas = (listload::bwList)it1->second;
+                    //printf("cmp with %02x %02x %02x %02x %02x %02x\n",bwDatas.apMac[0],bwDatas.apMac[1],bwDatas.apMac[2],bwDatas.apMac[3],bwDatas.apMac[4],bwDatas.apMac[5]);
+                    //printf("checking blk ap rule\n");
+                    macCmpFlag = memcmp(&(bwDatas.apMac),&(mF->addr3),6);
+                    if(macCmpFlag == 0){
+
+                        //printf("view func datas %d %02x %02x %02x %02x %02x %02x\n",bwDatas.apCipher,bwDatas.apMac[0],bwDatas.apMac[1],bwDatas.apMac[2],bwDatas.apMac[3],bwDatas.apMac[4],bwDatas.apMac[5]);
+                        listSF.auth = bwDatas.apAuth;
+                        listSF.enc = bwDatas.apEnc;
+                        listSF.groupCipher = bwDatas.apCipher;
+                        listSF.pairwiseCipher = bwDatas.apCipher;
+                        cmpFlag = memcmp(&listSF,&sF,sizeof(SecurityFlag));
+                        if(cmpFlag == 0){
+                                printf("LISTED AP RULE!(BLACK)\n");
+                                BLKFlag = true;
+                                break;
+                                //pass pkt
+                        }
+                    }
+
+
+              }
+
+          }
+          printf("NOT LISTED AP RULE(BLACK) \n");
+          if(WHTFlag == false && BLKFlag == false){
+                    printf("\ndisordered!(AP RULE)\n");
+                    //start function(structure write and throw map,db)
+
+          }
 
 
            //*********************Initialization*******************
@@ -493,7 +540,7 @@ int usrfunc::misconfigureAP(listload& listMan2)
            //memset(sM,0,sizeof(struct SecurityMethod));
            //memset(sF,0,sizeof(struct SecurityFlag));
           // memset(koT,0,sizeof(struct KindOfType));
-           printf("done!\n\n");
+           //printf("done!\n\n");
            return 0;
 
 }
@@ -506,9 +553,9 @@ void usrfunc::test_viewFunc(listload& listMan2){
     listload::bw_list::iterator it;
 
     for(it = listMan2.BlackList.begin();it !=listMan2.BlackList.end();it++){
-        printf("view func first %d\n",it->first);
+        //printf("view func first %d\n",it->first);
         bwDatas = (listload::bwList)it->second;
-        printf("view func datas %d %02x %02x %02x %02x %02x %02x\n",bwDatas.apCipher,bwDatas.apMac[0],bwDatas.apMac[1],bwDatas.apMac[2],bwDatas.apMac[3],bwDatas.apMac[4],bwDatas.apMac[5]);
+        //printf("view func datas %d %02x %02x %02x %02x %02x %02x\n",bwDatas.apCipher,bwDatas.apMac[0],bwDatas.apMac[1],bwDatas.apMac[2],bwDatas.apMac[3],bwDatas.apMac[4],bwDatas.apMac[5]);
 
     }
 
@@ -516,22 +563,24 @@ void usrfunc::test_viewFunc(listload& listMan2){
 }
 
 
-void usrfunc::macCmp(void){
-    RadiotapHeader *RH = (RadiotapHeader*)(packet);
+void usrfunc::macCmp(listload& listMan2){
+      WHTFlag = false; //true in whitelisted packet
+      BLKFlag = false; //true in blacklisted packet
+      RadiotapHeader *RH = (RadiotapHeader*)(pktPoint);
       int length = RH->length;
-      ManagementFrame *MF = (ManagementFrame*)(packet+length);
+      ManagementFrame *MF = (ManagementFrame*)(pktPoint+length);
 
-      int type = MF->frameCtrl.type;
-      int subtype = MF->frameCtrl.subType;
+     // int type = MF->frameCtrl.type;
+     // int subtype = MF->frameCtrl.subType;
 
-      int ToDs = MF->frameCtrl.toDs;
-      int FromDs = MF->frameCtrl.fromDs;
+     // int ToDs = MF->frameCtrl.toDs;
+      //int FromDs = MF->frameCtrl.fromDs;
 
 
       //if(type == 0 && subtype ==0) // Association Request Frame
       //if((ToDs == 0 && FromDs == 1) || (ToDs == 1 && FromDs == 0))
-      {
-          printf("====================================================\n");
+    //  {
+          //printf("====================================================\n");
          /* if(ToDs == 0 && FromDs == 1)
           {
               printf("From AP\n");
@@ -541,15 +590,70 @@ void usrfunc::macCmp(void){
               printf("To AP\n");
           }*/
 
-          printf("Sequnce  : %d\n", (MF->seq));
+          //printf("Sequnce  : %d\n", (MF->seq));
 
-          printMac(packet, 1);    //DA
-          printMac(packet, 2);    //SA
-          printMac(packet, 3);    //BSS ID
+          //printMac(1);    //DA
+          //printMac(2);    //SA
+          //printMac(3);    //BSS ID
+          int cmpFlag = 0;
+          //int macCmpFlag = 0;
+          //uint8_t cmpArray[6];
+          listload::bw_list::iterator it;
+          printf("-------------------------------------------------\n");
+          printf("AP MAC CHECK\n\n");
 
+
+          //wht list!
+          for(it = listMan2.WhiteList.begin();it !=listMan2.WhiteList.end();it++){
+              //printf("view func first %d\n",it->first);
+              bwDatas = (listload::bwList)it->second;
+              printf("pkt compare with %02x %02x %02x %02x %02x %02x\n",bwDatas.apMac[0],bwDatas.apMac[1],bwDatas.apMac[2],bwDatas.apMac[3],bwDatas.apMac[4],bwDatas.apMac[5]);
+
+              cmpFlag = memcmp(&(bwDatas.apMac),&(MF->addr3),6);
+              if(cmpFlag == 0){
+                  printf("LISTED AP MAC!(WHITE)\n");
+                  WHTFlag = true;
+                  break;
+                  //start function(structure write and throw map,db)
+              }
+
+          }
+          printf("NOT LISTED AP MAC(WHITE)\n");
+          if(WHTFlag == false){
+              cmpFlag = 0;
+              //uint8_t cmpArray[6];
+              listload::bw_list::iterator it1;
+
+
+              //blk list!
+              for(it1 = listMan2.BlackList.begin();it1 !=listMan2.BlackList.end();it1++){
+                    //printf("view func first %d\n",it->first);
+                    bwDatas = (listload::bwList)it1->second;
+                    printf("cmp with %02x %02x %02x %02x %02x %02x\n",bwDatas.apMac[0],bwDatas.apMac[1],bwDatas.apMac[2],bwDatas.apMac[3],bwDatas.apMac[4],bwDatas.apMac[5]);
+
+                    cmpFlag = memcmp(&(bwDatas.apMac),&(MF->addr3),6);
+                    if(cmpFlag == 0){
+                        printf("LISTED AP MAC!(BLACK)\n");
+                        BLKFlag = true;
+                        break;
+                        //already enrolled packet
+                                //start function(structure write and throw map,db)
+                     }
+
+               }
+
+          }
+          if(WHTFlag == false && BLKFlag == false){
+                   printf("\ndisordered!(AP MAC)\n\n");
+                   //start function(structure write and throw map,db)
+
+               }
+
+
+          /*
           for(int i=0 ; i<6; i++)
           {
-              int n = memcmp((char*)&MF->addr2[i], (char*)&MF->addr3[i], 1);
+              int n = memcmp((char*)&MF->addr2[i], (char*)&MF->addr3[i], 6);
               if(n != 0)
               {
                   printf("different\n");
@@ -560,54 +664,108 @@ void usrfunc::macCmp(void){
                   printf("same\n");
               }
           }
+
+         */
+ }
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------
+void usrfunc::adhocFunc(listload& listMan2)
+{
+    WHTFlag = false; //true in whitelisted packet
+    BLKFlag = false; //true in blacklisted packet
+    Radiotap_Header *RD;
+    RD = (Radiotap_Header *)pktPoint;
+    Manage *MN;
+    MN = (Manage *)((u_char *)pktPoint+(RD->Header_Length));
+    //u_int16_t type1 = ntohs(MN->Duration);
+    //u_int16_t type2 = ntohs(MN->Sequence);
+    //u_int8_t frame_type = MN->Frame_control.Type;
+    u_int8_t IBSS_Status = MN->Wireless_LAN.Capavility.IBSS;
+
+/*
+    if (frame_type == 0){
+        printf("-------------------------------------------------\n");
+        printf("Managemenet Frame\n");
+        printf("FramControl : %04x\n", MN->Frame_control);
+        printf("frame type : %02x\n", frame_type);
+        printf("Duration/ID Field : %04x\n",type1);
+        printf("DA : %02x-%02x-%02x-%02x-%02x-%02x\n", MN->des[0],MN->des[1],MN->des[2],MN->des[3],MN->des[4],MN->des[5]);
+        printf("SA : %02x-%02x-%02x-%02x-%02x-%02x\n", MN->src[0],MN->src[1],MN->src[2],MN->src[3],MN->src[4],MN->src[5]);
+        printf("BSS ID : %02x-%02x-%02x-%02x-%02x-%02x\n", MN->BSS[0],MN->BSS[1],MN->BSS[2],MN->BSS[3],MN->BSS[4],MN->BSS[5]);
+        printf("Sequence : %04x\n", type2);
+        printf("Capability : %04x\n", MN->Wireless_LAN.Capavility);
+        printf("IBSS_satus : %01x\n",IBSS_Status);
+    }
+*/
+  //  if (IBSS_Status == 1)
+    // printf("\nAD-HOC Network\n");
+    int cmpFlag = 0;
+    int macCmpFlag = 0;
+    //uint8_t cmpArray[6];
+    listload::bw_list::iterator it;
+
+    printf("-------------------------------------------------\n");
+      //wht list!
+    printf("CHECK IBSS\n\n");
+     for(it = listMan2.WhiteList.begin();it !=listMan2.WhiteList.end();it++){
+        //printf("view func first %d\n",it->first);
+        bwDatas = (listload::bwList)it->second;
+        macCmpFlag = memcmp(&(bwDatas.apMac),&(MN->BSS),6);
+        if(macCmpFlag == 0){
+            printf("cmp ibss with %d\n",bwDatas.adHocStat);
+
+            cmpFlag = memcmp(&(bwDatas.adHocStat),&(IBSS_Status),1);
+            if(cmpFlag == 0){
+                printf("LISTED IBSS!(WHITE)\n");
+                WHTFlag = true;
+                break;
+                //alreay have white list OK.
+            }
+        }
+    }
+    printf("NOT LISTED IBSS(WHITE) \n");
+    cmpFlag = 0;
+    macCmpFlag = 0;
+    if(WHTFlag == false){
+        cmpFlag = 0;
+        //uint8_t cmpArray[6];
+        listload::bw_list::iterator it1;
+
+
+                    //blk list!
+        for(it1 = listMan2.BlackList.begin();it1 !=listMan2.BlackList.end();it1++){
+              //printf("view func first %d\n",it->first);
+              bwDatas = (listload::bwList)it1->second;
+              //printf("cmp with %02x %02x %02x %02x %02x %02x\n",bwDatas.apMac[0],bwDatas.apMac[1],bwDatas.apMac[2],bwDatas.apMac[3],bwDatas.apMac[4],bwDatas.apMac[5]);
+              //printf("check blk ibss\n");
+              macCmpFlag = memcmp(&(bwDatas.apMac),&(MN->BSS),6);
+              if(macCmpFlag == 0){
+                  printf("cmp ibss with %d\n",bwDatas.adHocStat);
+
+                  cmpFlag = memcmp(&(bwDatas.adHocStat),&(IBSS_Status),1);
+                  if(cmpFlag == 0){
+                      printf("LISTED IBSS\n");
+                      BLKFlag = true;
+                      break;
+                      //alreay have black list OK.
+                  }
+              }
+
+         }
+
       }
+      printf("NOT LISTED IBSS(BLACK) \n");
+      if(WHTFlag == false && BLKFlag == false){
+          printf("\ndisordered!(ad_hoc)\n\n");
+          //start function(structure write and throw map,db)
+
+      }
+
+
+
 }
 
-void usrfunc::printMac(int n){
-    RadiotapHeader *RH = (RadiotapHeader*)(packet);
-        int length = RH->length;
-        ManagementFrame *MF = (ManagementFrame*)(packet+length);
 
 
-        if(n==1)
-        {
-            printf("Address1 : ");
-            for(int i=0; i<6 ;i++)
-            {
-                if(i==5)
-                {
-                    printf("%02x\n", MF->addr1[i]);
-                    break;
-                }
-                printf("%02x-", MF->addr1[i]);
-            }
-        }
-        else if(n==2)
-        {
-            printf("Address2 : ");
-            for(int i=0; i<6 ;i++)
-            {
-                if(i==5)
-                {
-                    printf("%02x\n", MF->addr2[i]);
-                    break;
-                }
-                printf("%02x-", MF->addr2[i]);
-            }
-        }
-        else if(n==3)
-        {
-            printf("Address3 : ");
-            for(int i=0; i<6 ;i++)
-            {
-                if(i==5)
-                {
-                    printf("%02x\n", MF->addr3[i]);
-                    break;
-                }
-                printf("%02x-", MF->addr3[i]);
-            }
-        }
-        else
-            printf("Input Error");
-}

@@ -25,7 +25,8 @@ HEADERS += \
     mac.h \
     deauth.h \
     aaa.h \
-    wonsang.h
+    wonsang.h \
+    bbb.h
 LIBS += -lpcap
 LIBS +=-lmysqlclient
 

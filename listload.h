@@ -56,6 +56,7 @@ class listload
         int apCipher;
         int apEnc;
         int macType;
+        uint8_t adHocStat;
 
 
 

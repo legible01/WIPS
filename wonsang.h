@@ -7,7 +7,7 @@
 #include <string.h>
 
 #pragma pack(push, 1)
-struct RadiotapHeader
+/*struct RadiotapHeader
 {
     uint8_t    reversion;
     uint8_t    pad;
@@ -40,7 +40,7 @@ struct ManagementFrame
            //uint16_t   seq_ctrl;   //2 bytes
            uint16_t   seq      : 12;   //12 bits
            uint8_t    fragment :  4;   // 4 bits
-};
+};*/
 #pragma pack(pop)
 
 void macCmp(const u_char *);

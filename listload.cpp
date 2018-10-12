@@ -25,7 +25,7 @@ int listload:: initlist(MYSQL_RES* lRes,int lFlag)
     while((row = mysql_fetch_row(lRes)))
     {
         rowNum = (int)strtol(row[0],NULL,10);
-        printf("num check1 is %d\n",rowNum);
+       // debug  printf("num check1 is %d\n",rowNum);
         convMac(0,row[1]);
         bwStruct.channel = (int)strtol(row[2],NULL,10);
         bwStruct.blockStat = (int)strtol(row[3],NULL,10);
@@ -34,22 +34,30 @@ int listload:: initlist(MYSQL_RES* lRes,int lFlag)
         bwStruct.apCipher = (int)strtol(row[6],NULL,10);
         bwStruct.apEnc = (int)strtol(row[7],NULL,10);
         bwStruct.macType = (int)strtol(row[8],NULL,10);
-        printf("st test %02x %02x %02x %02x %02x %02x\n",bwStruct.apMac[0],bwStruct.apMac[1],bwStruct.apMac[2],bwStruct.apMac[3],bwStruct.apMac[4],bwStruct.apMac[5]);
-        printf("\n");
+        bwStruct.adHocStat = (uint8_t)strtol(row[9],NULL,10);
+        // debug printf("st test %02x %02x %02x %02x %02x %02x\n",bwStruct.apMac[0],bwStruct.apMac[1],bwStruct.apMac[2],bwStruct.apMac[3],bwStruct.apMac[4],bwStruct.apMac[5]);
+       // debug  printf("\n");
+        //
+        if(bwStruct.macType == 0){
+            memset(&(bwStruct.stMac[0]),0,6);
+        }
         if(lFlag == 10){
             BlackList.insert(std::make_pair(rowNum,bwStruct));
         }else if(lFlag == 11){
             WhiteList.insert(std::make_pair(rowNum,bwStruct));
         }
 
-    }
+    }/* debug code
     bw_list::iterator it;
     for(it = BlackList.begin();it !=BlackList.end();it++){
         printf("first %d\n",it->first);
+        if((it->first) == 5){
+            printf("struct %02h\n",(listload::bwList)it->second);
+        }
 
 
-    }
-    //printf("thie end\n\n");
+    }*/
+    printf("list enroll DB to MAP!\n\n");
     return 0;
 }
 
@@ -62,7 +70,7 @@ int listload:: initwht(MYSQL_RES* lRes)
     while((row = mysql_fetch_row(lRes)))
     {
         rowNum = (int)strtol(row[0],NULL,10);
-        printf("num check1 is %d\n",rowNum);
+        // debug printf("num check1 is %d\n",rowNum);
         convMac(0,row[1]);
         bwStruct.channel = (int)strtol(row[2],NULL,10);
         bwStruct.blockStat = (int)strtol(row[3],NULL,10);
@@ -71,8 +79,9 @@ int listload:: initwht(MYSQL_RES* lRes)
         bwStruct.apCipher = (int)strtol(row[6],NULL,10);
         bwStruct.apEnc = (int)strtol(row[7],NULL,10);
         bwStruct.macType = (int)strtol(row[8],NULL,10);
-        printf("st test %02x %02x %02x %02x %02x %02x\n",bwStruct.apMac[0],bwStruct.apMac[1],bwStruct.apMac[2],bwStruct.apMac[3],bwStruct.apMac[4],bwStruct.apMac[5]);
-        printf("\n");
+        bwStruct.adHocStat = (uint8_t)strtol(row[9],NULL,10);
+        // debug  printf("st test %02x %02x %02x %02x %02x %02x\n",bwStruct.apMac[0],bwStruct.apMac[1],bwStruct.apMac[2],bwStruct.apMac[3],bwStruct.apMac[4],bwStruct.apMac[5]);
+        // debug  printf("\n");
 
         BlackList.insert(std::make_pair(rowNum,bwStruct));
 

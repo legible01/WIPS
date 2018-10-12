@@ -9,6 +9,7 @@
 #include "aaa.h"
 #include "listload.h"
 #include "wonsang.h"
+#include "bbb.h"
 
 
 
@@ -22,6 +23,9 @@ public:
     packframes::FC* frameCtrl;
     struct packframes::ManagementFrame *mgmtFrame;
     listload::bwList bwDatas;
+    bool WHTFlag = false; //true in whitelisted packet
+    bool BLKFlag = false; //true in blacklisted packet
+
     //listload* lLoad;
     //listload t1t1;
 
@@ -38,8 +42,8 @@ public:
     int Auth(uint8_t auth);
     int misconfigureAP(listload& listMan2);
     void test_viewFunc(listload& listMan2);
-    void macCmp(void);
-    void printMac(int n);
+    void macCmp(listload& listMan2);
+    void adhocFunc(listload& listMan2);
 
 
 };
