@@ -3,13 +3,18 @@
 usrfunc::usrfunc(uint8_t *packet)
 {
     this->pktPoint = packet;
-    this->RTHeader = (packframes::rth*)packet;
+    this->RTHeader = (packframes::rth*)((uint8_t*)packet);
     this->frameCtrl = (packframes::FC*)((uint8_t*)(packet+RTHeader->rth_length));
     this->mgmtFrame = (packframes::ManagementFrame*)((uint8_t*)(packet+RTHeader->rth_length));
+    memset(this->APMac,0,6);
+    memset(this->cliMac,0,6);
+    //when mgmt then set ap,cli
+    //need set um....
 }
-
 void usrfunc::fakeAp(listload& listMan2)
 {
+    WHTFlag = false; //true in whitelisted packet
+    BLKFlag = false; //true in blacklisted packet
     uint8_t* pktPoint2 = this->pktPoint;
 
     struct packframes::WifiName *wifiName;
@@ -24,6 +29,8 @@ void usrfunc::fakeAp(listload& listMan2)
            //SSID************************************************************************************//
            pktPoint2 += (RTHeader->rth_length + sizeof(struct packframes::ManagementFrame) + sizeof(struct packframes::BeaconFrameBody) + sizeof(struct packframes::TagBody));
            wifiName = (struct packframes::WifiName *)pktPoint2;
+           uint8_t* lengthPnt = ((uint8_t*)pktPoint2) - 1;
+           printf("cur leng is %d\n",*lengthPnt);
            printf("SSID:  ");
            for(int i=0; i<32; i++)
            {
@@ -31,11 +38,85 @@ void usrfunc::fakeAp(listload& listMan2)
                    break;
 
                printf("%c", wifiName->ssid[i]);
+
            }
    printf("\n\n");
+   int cmpFlag = 0;
+   int macCmpFlag = 0;
+   //uint8_t cmpArray[6];
+   listload::bw_list::iterator it;
+
+   printf("-------------------------------------------------\n");
+     //wht list!
+   printf("CHECK fakeAp\n\n");
+    for(it = listMan2.WhiteList.begin();it !=listMan2.WhiteList.end();it++){
+       //printf("view func first %d\n",it->first);
+       bwDatas = (listload::bwList)it->second;
+       macCmpFlag = memcmp(&(bwDatas.apMac),&(mgmtFrame->addr3),6);
+       if(macCmpFlag == 0){
+           printf("cmp ssid %s\n",bwDatas.ssid);
+
+           cmpFlag = memcmp(&(bwDatas.ssid),&(wifiName->ssid),*lengthPnt);
+           if(cmpFlag == 0){
+               printf("LISTED SSID!(WHITE)\n");
+               WHTFlag = true;
+               break;
+               //alreay have white list OK.
+           }
+       }
+   }
+
+   cmpFlag = 0;
+   macCmpFlag = 0;
+   if(WHTFlag == false){
+       printf("NOT LISTED SSID(WHITE) \n");
+       cmpFlag = 0;
+       //uint8_t cmpArray[6];
+       listload::bw_list::iterator it1;
+
+
+                   //blk list!
+       for(it1 = listMan2.BlackList.begin();it1 !=listMan2.BlackList.end();it1++){
+             //printf("view func first %d\n",it->first);
+             bwDatas = (listload::bwList)it1->second;
+             //printf("cmp with %02x %02x %02x %02x %02x %02x\n",bwDatas.apMac[0],bwDatas.apMac[1],bwDatas.apMac[2],bwDatas.apMac[3],bwDatas.apMac[4],bwDatas.apMac[5]);
+             //printf("check blk SSID\n");
+             macCmpFlag = memcmp(&(bwDatas.apMac),&(mgmtFrame->addr3),6);
+             if(macCmpFlag == 0){
+                 printf("cmp ssid %s\n",bwDatas.ssid);
+
+                 cmpFlag = memcmp(&(bwDatas.ssid),&(wifiName->ssid),*lengthPnt);
+                 if(cmpFlag == 0){
+                     printf("LISTED SSID(BLACK)\n");
+                     BLKFlag = true;
+                     break;
+                     //alreay have black list OK.
+                 }
+             }
+
+        }
+
+     }
+     memset(&(exPkt.ssid),0,32);
+     memcpy(&(exPkt.ssid),&(wifiName->ssid),*lengthPnt);
+     printf("exPkt ssid %s\n",exPkt.ssid);
+     printf("NOT LISTED SSID(BLACK) \n");
+     if(WHTFlag == false && BLKFlag == false){
+         printf("\ndisordered!(FAKE AP)\n\n");
+         storFlag = true;
+         char tempbuf[250] = {0,};
+         sprintf(tempbuf,"%s FAKEAP",atkType);
+         sprintf(atkType,"%s",tempbuf);
+         //start function(structure write and throw map,db)
+
+     }
 
 
 }
+
+
+
+
 int usrfunc::Cipher(uint8_t cipher)
 {
     switch (cipher)//Group Cipher Suite(broad,multicast) Type
@@ -107,19 +188,21 @@ int usrfunc::Auth(uint8_t auth)
 int usrfunc::misconfigureAP(listload& listMan2)
 {
 
+    WHTFlag = false; //true in whitelisted packet
+    BLKFlag = false; //true in blacklisted packet
     uint8_t *data = this->pktPoint;
-    struct RadiotapHeader *rH;
-    struct RadiotapHeaderFlag *rF;
-    struct ManagementFrame *mF;
-    struct FrameCtrl *fC;
-    struct OptionField *oF;
-    struct Rsn *rsn;
-    struct VendorSpecific *vS;
+    struct RadiotapHeader *rH;//
+    struct RadiotapHeaderFlag *rF;//
+    struct ManagementFrame *mF;//
+    struct FrameCtrl *fC;//
+    struct OptionField *oF;//
+    struct Rsn *rsn;//
+    struct VendorSpecific *vS;//
     struct SecurityMethod sM;
     struct SecurityFlag sF;
     struct SecurityFlag listSF;
-    struct AkmSuiteSelector *aS;
-    struct PairwiseCipherSuiteSelector *pS;
+    //struct AkmSuiteSelector *aS;
+   // struct PairwiseCipherSuiteSelector *pS;
 
 
     rH = (struct RadiotapHeader *)data;
@@ -462,6 +545,9 @@ int usrfunc::misconfigureAP(listload& listMan2)
 
           // printf("--------------------------------\n");
            //---------------compare listed datas <-> captured datas
+           exPkt.apAuth = sF.auth;
+           exPkt.apCipher = sF.groupCipher;
+           exPkt.apEnc = sF.enc;
            int cmpFlag = 0;
            int macCmpFlag = 0;
            listload::bw_list::iterator it;
@@ -486,10 +572,11 @@ int usrfunc::misconfigureAP(listload& listMan2)
                    }
                }
            }
-           printf("NOT LISTED AP RULE(WHITE)\n");
+
            cmpFlag = 0;
            macCmpFlag = 0;
            if(WHTFlag == false){
+               printf("NOT LISTED AP RULE(WHITE)\n");
                 //cmpFlag = 0;
                 //uint8_t cmpArray[6];
                 listload::bw_list::iterator it1;
@@ -523,12 +610,17 @@ int usrfunc::misconfigureAP(listload& listMan2)
           }
           printf("NOT LISTED AP RULE(BLACK) \n");
           if(WHTFlag == false && BLKFlag == false){
+                    storFlag = true;
+                    char tempbuf[250] = {0,};
+                    sprintf(tempbuf,"%s MISCONFIGURE AP",atkType);
+                    sprintf(atkType,"%s",tempbuf);
+                    //sprintf(blkBuff,"INSERT INTO TEST_BB (ap_mac,channel,block_stat)  VALUES ('%02x%02x%02x%02x%02x%02x',%d,%d)",exPkt.apMac[0],exPkt.apMac[1],exPkt.apMac[2],exPkt.apMac[3],exPkt.apMac[4],exPkt.apMac[5],exPkt.channel,exPkt.blockStat);
                     printf("\ndisordered!(AP RULE)\n");
                     //start function(structure write and throw map,db)
 
           }
 
-
+          //pkt data extract here
            //*********************Initialization*******************
            memset(rH,0,sizeof(struct RadiotapHeader));
            memset(rF,0,sizeof(struct RadiotapHeaderFlag));
@@ -608,7 +700,7 @@ void usrfunc::macCmp(listload& listMan2){
               //printf("view func first %d\n",it->first);
               bwDatas = (listload::bwList)it->second;
               printf("pkt compare with %02x %02x %02x %02x %02x %02x\n",bwDatas.apMac[0],bwDatas.apMac[1],bwDatas.apMac[2],bwDatas.apMac[3],bwDatas.apMac[4],bwDatas.apMac[5]);
-
+              printf("current pack bssid is %02x %02x %02x %02x %02x %02x\n",MF->addr3[0],MF->addr3[1],MF->addr3[2],MF->addr3[3],MF->addr3[4],MF->addr3[5]);
               cmpFlag = memcmp(&(bwDatas.apMac),&(MF->addr3),6);
               if(cmpFlag == 0){
                   printf("LISTED AP MAC!(WHITE)\n");
@@ -618,8 +710,9 @@ void usrfunc::macCmp(listload& listMan2){
               }
 
           }
-          printf("NOT LISTED AP MAC(WHITE)\n");
+
           if(WHTFlag == false){
+              printf("NOT LISTED AP MAC(WHITE)\n");
               cmpFlag = 0;
               //uint8_t cmpArray[6];
               listload::bw_list::iterator it1;
@@ -645,6 +738,10 @@ void usrfunc::macCmp(listload& listMan2){
           }
           if(WHTFlag == false && BLKFlag == false){
                    printf("\ndisordered!(AP MAC)\n\n");
+                   storFlag = true;
+                   char tempbuf[250] = {0,};
+                   sprintf(tempbuf,"%s UNDEFINED AP MAC",atkType);
+                   sprintf(atkType,"%s",tempbuf);
                    //start function(structure write and throw map,db)
 
                }
@@ -675,6 +772,8 @@ void usrfunc::adhocFunc(listload& listMan2)
 {
     WHTFlag = false; //true in whitelisted packet
     BLKFlag = false; //true in blacklisted packet
+    //WHTFlag = false; //true in whitelisted packet
+    //BLKFlag = false; //true in blacklisted packet
     Radiotap_Header *RD;
     RD = (Radiotap_Header *)pktPoint;
     Manage *MN;
@@ -683,6 +782,8 @@ void usrfunc::adhocFunc(listload& listMan2)
     //u_int16_t type2 = ntohs(MN->Sequence);
     //u_int8_t frame_type = MN->Frame_control.Type;
     u_int8_t IBSS_Status = MN->Wireless_LAN.Capavility.IBSS;
+    exPkt.adHocStat = IBSS_Status;
+    //listMan2.bwStruct.adHocStat = IBSS_Status;
 
 /*
     if (frame_type == 0){
@@ -725,10 +826,11 @@ void usrfunc::adhocFunc(listload& listMan2)
             }
         }
     }
-    printf("NOT LISTED IBSS(WHITE) \n");
+
     cmpFlag = 0;
     macCmpFlag = 0;
     if(WHTFlag == false){
+        printf("NOT LISTED IBSS(WHITE) \n");
         cmpFlag = 0;
         //uint8_t cmpArray[6];
         listload::bw_list::iterator it1;
@@ -759,6 +861,10 @@ void usrfunc::adhocFunc(listload& listMan2)
       printf("NOT LISTED IBSS(BLACK) \n");
       if(WHTFlag == false && BLKFlag == false){
           printf("\ndisordered!(ad_hoc)\n\n");
+          storFlag = true;
+          char tempbuf[250] = {0,};
+          sprintf(tempbuf,"%s AD HOC",atkType);
+          sprintf(atkType,"%s",tempbuf);
           //start function(structure write and throw map,db)
 
       }
@@ -769,3 +875,173 @@ void usrfunc::adhocFunc(listload& listMan2)
 
 
 
+void usrfunc::retMacAdr(void)
+{
+    switch(this->frameCtrl->toDs){
+        case 0:
+        {
+            if(this->frameCtrl->fromDs == 0){//00
+                memcpy(this->APMac,this->mgmtFrame->addr3,6);
+                memcpy(this->cliMac,this->mgmtFrame->addr1,6);
+            }else if(this->frameCtrl->fromDs == 1){
+                memcpy(this->APMac,this->mgmtFrame->addr2,6);
+                memcpy(this->cliMac,this->mgmtFrame->addr1,6);
+
+            }
+
+        }
+        break;
+        case 1:
+        {
+            if(this->frameCtrl->fromDs == 0){//00
+                memcpy(this->APMac,this->mgmtFrame->addr1,6);
+                memcpy(this->cliMac,this->mgmtFrame->addr3,6);
+            }else if(this->frameCtrl->fromDs == 1){
+                //memcpy(this->APMac,this->mgmtFrame->addr3,6);
+                //memcpy(this->cliMac,this->mgmtFrame->addr1,6);
+                printf("11\n");
+
+            }
+        }
+        break;
+    }
+    }
+
+void usrfunc::getCurPktData(listload& listMan2){
+    radioGetData();//channel
+    exPkt.blockStat = 1;
+    exPkt.macType = 0;//beaconFrame
+
+
+    memcpy(exPkt.apMac,mgmtFrame->addr3,6);
+    memset(exPkt.stMac,0,6);//beaconFrame
+    memset(atkType,0,sizeof(atkType));
+    WHTFlag = false; //true in whitelisted packet
+    BLKFlag = false;
+    storFlag = false;
+
+    /*
+
+        int apAuth;
+        int apCipher;
+        int apEnc;
+
+        uint8_t adHocStat;
+
+        uint8_t ssid[50];
+
+    */
+
+
+}
+void usrfunc::radioGetData(void){
+    //printf("test1\n\n\n\n");
+    int pflgLth = 0;
+    //u_long checkNum = 0;
+    bool pflgChk = false;
+    for(u_long i=0; i<3;i++){
+        pflgChk = RTHeader->rth_present_flg.pflg1.test(i);
+        //std::cout << pflgChk <<std::endl;
+        if(pflgChk == true){
+            pflgLth += PFrame.pflg_allign[i];
+            //printf("current pFlg %d\n",pflgLth);
+        }
+
+    }
+    //setting channel
+    //uint16_t channel12;
+    //printf("sizeof rthear %d\n",sizeof(RTHeader));
+   // memcpy(&exPkt.channel,(pktPoint+RTHEADERSIZE+pflgLth),2);
+    uint16_t HzChan = 0;
+    memcpy(&HzChan,(pktPoint+RTHEADERSIZE+pflgLth),2);
+    printf("memcpy channel! %d\n",HzChan);
+    exPkt.channel = hzToCnl(HzChan);
+    //printf("show channel %02x %02x\n",channel12[0],channel12[1]);
+    //channel12 = ntohs(channel12);
+    //printf("show channel %d\n",channel12);
+
+
+}
+
+void usrfunc::inputCurPkt(listload& listMan2,dbmanage& wipsDB2){
+    printf("expkt channel %d\n",exPkt.channel);
+    char blkBuff[255];
+    char logBuff[255];
+    //exPkt;
+    printf("INSERT INTO wips_black_blacklist (ap_mac,channel,blockstat) VALUES ('%02x%02x%02x%02x%02x%02x',%d,%d)\n",exPkt.apMac[0],exPkt.apMac[1],exPkt.apMac[2],exPkt.apMac[3],exPkt.apMac[4],exPkt.apMac[5],exPkt.channel,exPkt.blockStat);
+    sprintf(blkBuff,"INSERT INTO wips_black_blacklist (ap_mac,channel,block_stat,ap_auth,ap_cipher,ap_enc,mac_type,ad_hoc_stat,ap_ssid) VALUES ('%02x%02x%02x%02x%02x%02x',%d,%d,%d,%d,%d,%d,%d,'%s')",exPkt.apMac[0],exPkt.apMac[1],exPkt.apMac[2],exPkt.apMac[3],exPkt.apMac[4],exPkt.apMac[5],exPkt.channel,exPkt.blockStat,exPkt.apAuth,exPkt.apCipher,exPkt.apEnc,exPkt.macType,exPkt.adHocStat,exPkt.ssid);
+    printf("send blk!! %s\n",blkBuff);
+    wipsDB2.dbQuery(blkBuff);
+    sprintf(logBuff,"INSERT INTO wips_home_blocklog (mac,atk_type,block_stat)  VALUES ('%02x%02x%02x%02x%02x%02x','%s',%d)",exPkt.apMac[0],exPkt.apMac[1],exPkt.apMac[2],exPkt.apMac[3],exPkt.apMac[4],exPkt.apMac[5],atkType,exPkt.blockStat);
+    printf("send log!! %s\n",logBuff);
+    wipsDB2.dbQuery(logBuff);
+    //input data in map
+    listMan2.blkCnt +=1;
+    memset(&(listMan2.bwStruct),0,sizeof(listMan2.bwStruct));
+    //memcpy(&(listMan2.bwStruct),&exPkt,sizeof(exPkt));
+    listMan2.bwStruct.apAuth = exPkt.apAuth;
+    listMan2.bwStruct.channel = exPkt.channel;
+    listMan2.bwStruct.blockStat = exPkt.blockStat;
+    listMan2.bwStruct.apCipher = exPkt.apCipher;
+    listMan2.bwStruct.apEnc = exPkt.apEnc;
+    listMan2.bwStruct.macType = exPkt.macType;
+    listMan2.bwStruct.adHocStat = exPkt.adHocStat;
+    memcpy(&(listMan2.bwStruct.apMac[0]),&(exPkt.apMac[0]),6);
+    memcpy(&(listMan2.bwStruct.stMac[0]),&(exPkt.stMac[0]),6);
+    memcpy(&(listMan2.bwStruct.ssid),&(exPkt.ssid),32);
+
+    listMan2.BlackList.insert(std::make_pair(listMan2.blkCnt,listMan2.bwStruct));
+
+    //change query
+}
+int usrfunc::hzToCnl(uint16_t recvhz){
+    switch(recvhz) {
+        case 2412:{
+            return 1;
+        }
+        case 2417:{
+            return 2;
+        }
+        case 2422:{
+            return 3;
+        }
+        case 2427:{
+            return 4;
+        }
+        case 2432:{
+            return 5;
+        }
+        case 2437:{
+            return 6;
+        }
+        case 2442:{
+            return 7;
+        }
+        case 2447:{
+            return 8;
+        }
+        case 2452:{
+            return 9;
+        }
+        case 2457:{
+            return 10;
+        }
+        case 2462:{
+            return 11;
+        }
+        case 2467:{
+            return 12;
+        }
+        case 2472:{
+            return 13;
+        }
+        case 2482:{
+            return 14;
+        }
+        default :
+            break;
+
+
+    }
+
+}

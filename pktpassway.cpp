@@ -49,7 +49,7 @@ int pktPassWay::main(void)
         {
         case 1:
         {
-                pktFilter((uint8_t*)pktData,listMan);
+                pktFilter((uint8_t*)pktData,listMan, wipsDB);
                 break;
         }
             case 0:
@@ -82,11 +82,13 @@ char* pktPassWay::correct_dev(int argCnt,char *argVector)
 
 
 
-void pktPassWay::pktFilter(uint8_t *pktData,listload& listMan1)
+void pktPassWay::pktFilter(uint8_t *pktData,listload& listMan1,dbmanage& wipsDB1)
 {
+    int debugCnt = 0;
     //uint8_t*
     usrfunc usrFunc(pktData);
     printf("===========================PACKET CAPTURE===============================\n\n");
+    memset(&(usrFunc.exPkt),0,sizeof(usrFunc.exPkt));
     //usrFunc.test_viewFunc(listMan1);
     //make reference
     //printf("")
@@ -95,16 +97,34 @@ void pktPassWay::pktFilter(uint8_t *pktData,listload& listMan1)
             //D memList.getPktInfo(pktData);
 
             switch(usrFunc.frameCtrl->subType){
+
                 case(8):
                 {
-                    usrFunc.macCmp(listMan1);
-                    //usrFunc.test_viewFunc(listMan1);
-                    //usrFunc.fakeAp(listMan1);
-                    //printf("misconf\n");
+                    usrFunc.getCurPktData(listMan1);
                     int aa;
-                    aa = usrFunc.misconfigureAP(listMan1);
+                    usrFunc.macCmp(listMan1);
                     usrFunc.adhocFunc(listMan1);
+
+
+                    usrFunc.fakeAp(listMan1);
+                    aa = usrFunc.misconfigureAP(listMan1);
+                    //usrFunc.test_viewFunc(listMan1);
+
+                    //printf("misconf\n");
+
+
+
+
                     //memList.getPktInfo(pktData);
+                    if(usrFunc.storFlag == true){
+                        usrFunc.inputCurPkt(listMan1,wipsDB1);
+                        usrFunc.storFlag = false;
+                        memset(usrFunc.atkType,0,sizeof(usrFunc.atkType));
+
+                        }
+                    debugCnt+=1;
+                    if(debugCnt == 10)
+                        system("PAUSE");
                     break;
                     }
                 case(10):{
@@ -112,6 +132,8 @@ void pktPassWay::pktFilter(uint8_t *pktData,listload& listMan1)
                     break;
 
                 }
+                default:
+                    break;
             }
         break;
         }

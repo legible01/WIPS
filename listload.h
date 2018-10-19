@@ -47,6 +47,8 @@ class listload
     }info;
     info infoForm;
  //-------------blk----------------
+    int blkCnt = 0;
+
     typedef struct blk_wht_list{
         uint8_t apMac[6];
         int channel;
@@ -57,6 +59,7 @@ class listload
         int apEnc;
         int macType;
         uint8_t adHocStat;
+        char ssid[32];
 
 
 

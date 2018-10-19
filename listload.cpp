@@ -35,11 +35,15 @@ int listload:: initlist(MYSQL_RES* lRes,int lFlag)
         bwStruct.apEnc = (int)strtol(row[7],NULL,10);
         bwStruct.macType = (int)strtol(row[8],NULL,10);
         bwStruct.adHocStat = (uint8_t)strtol(row[9],NULL,10);
+        //memcpy(&(bwStruct.ssid[0]),&row[10],32);
         // debug printf("st test %02x %02x %02x %02x %02x %02x\n",bwStruct.apMac[0],bwStruct.apMac[1],bwStruct.apMac[2],bwStruct.apMac[3],bwStruct.apMac[4],bwStruct.apMac[5]);
        // debug  printf("\n");
         //
+        sprintf(bwStruct.ssid,"%s",row[10]);
+        printf("ssid is %s\n",row[10]);
         if(bwStruct.macType == 0){
             memset(&(bwStruct.stMac[0]),0,6);
+
         }
         if(lFlag == 10){
             BlackList.insert(std::make_pair(rowNum,bwStruct));
@@ -47,7 +51,9 @@ int listload:: initlist(MYSQL_RES* lRes,int lFlag)
             WhiteList.insert(std::make_pair(rowNum,bwStruct));
         }
 
-    }/* debug code
+    }
+    blkCnt = rowNum;
+    /* debug code
     bw_list::iterator it;
     for(it = BlackList.begin();it !=BlackList.end();it++){
         printf("first %d\n",it->first);

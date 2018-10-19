@@ -18,6 +18,6 @@ private:
 public:
     int main(void);
     char *correct_dev(int argCnt,char *argVector);
-    void pktFilter(uint8_t *pktData,listload& listMan1);
+    void pktFilter(uint8_t *pktData,listload& listMan1,dbmanage& wipsDB1);
     listload memList;
 };
