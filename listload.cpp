@@ -40,7 +40,7 @@ int listload:: initlist(MYSQL_RES* lRes,int lFlag)
        // debug  printf("\n");
         //
         sprintf(bwStruct.ssid,"%s",row[10]);
-        printf("ssid is %s\n",row[10]);
+        //printf("ssid is %s\n",row[10]);
         if(bwStruct.macType == 0){
             memset(&(bwStruct.stMac[0]),0,6);
 

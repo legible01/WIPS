@@ -31,7 +31,11 @@ void usrfunc::fakeAp(listload& listMan2)
            wifiName = (struct packframes::WifiName *)pktPoint2;
            uint8_t* lengthPnt = ((uint8_t*)pktPoint2) - 1;
            printf("cur leng is %d\n",*lengthPnt);
-           printf("SSID:  ");
+           if(*pktPoint2 == 0){
+               memset(&(exPkt.ssid),0,32);
+               return;
+           }
+           /*printf("SSID:  ");
            for(int i=0; i<32; i++)
            {
                if(pktPoint2[i] == 1)
@@ -40,7 +44,7 @@ void usrfunc::fakeAp(listload& listMan2)
                printf("%c", wifiName->ssid[i]);
 
            }
-   printf("\n\n");
+   printf("\n\n");*/
    int cmpFlag = 0;
    int macCmpFlag = 0;
    //uint8_t cmpArray[6];
@@ -100,8 +104,9 @@ void usrfunc::fakeAp(listload& listMan2)
      memset(&(exPkt.ssid),0,32);
      memcpy(&(exPkt.ssid),&(wifiName->ssid),*lengthPnt);
      printf("exPkt ssid %s\n",exPkt.ssid);
-     printf("NOT LISTED SSID(BLACK) \n");
+
      if(WHTFlag == false && BLKFlag == false){
+         printf("NOT LISTED SSID(BLACK) \n");
          printf("\ndisordered!(FAKE AP)\n\n");
          storFlag = true;
          char tempbuf[250] = {0,};
@@ -608,8 +613,9 @@ int usrfunc::misconfigureAP(listload& listMan2)
               }
 
           }
-          printf("NOT LISTED AP RULE(BLACK) \n");
-          if(WHTFlag == false && BLKFlag == false){
+
+          if(WHTFlag == false & BLKFlag == false){
+                    printf("NOT LISTED AP RULE(BLACK) \n");
                     storFlag = true;
                     char tempbuf[250] = {0,};
                     sprintf(tempbuf,"%s MISCONFIGURE AP",atkType);
@@ -858,8 +864,9 @@ void usrfunc::adhocFunc(listload& listMan2)
          }
 
       }
-      printf("NOT LISTED IBSS(BLACK) \n");
+
       if(WHTFlag == false && BLKFlag == false){
+          printf("NOT LISTED IBSS(BLACK) \n");
           printf("\ndisordered!(ad_hoc)\n\n");
           storFlag = true;
           char tempbuf[250] = {0,};
@@ -954,7 +961,13 @@ void usrfunc::radioGetData(void){
    // memcpy(&exPkt.channel,(pktPoint+RTHEADERSIZE+pflgLth),2);
     uint16_t HzChan = 0;
     memcpy(&HzChan,(pktPoint+RTHEADERSIZE+pflgLth),2);
-    printf("memcpy channel! %d\n",HzChan);
+    if(HzChan == 128){
+        doFlag = true;
+    }else{
+        doFlag = false;
+    }
+
+    //printf("memcpy channel! %d\n",HzChan);
     exPkt.channel = hzToCnl(HzChan);
     //printf("show channel %02x %02x\n",channel12[0],channel12[1]);
     //channel12 = ntohs(channel12);

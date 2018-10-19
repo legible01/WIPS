@@ -36,6 +36,7 @@ public:
     #pragma pack(pop)
     //listload* lLoad;
     //listload t1t1;
+    bool doFlag = false;
 
 
     typedef struct extPktInfo{       

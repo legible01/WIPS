@@ -47,6 +47,7 @@ class listload
     }info;
     info infoForm;
  //-------------blk----------------
+
     int blkCnt = 0;
 
     typedef struct blk_wht_list{

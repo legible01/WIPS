@@ -87,7 +87,7 @@ void pktPassWay::pktFilter(uint8_t *pktData,listload& listMan1,dbmanage& wipsDB1
     int debugCnt = 0;
     //uint8_t*
     usrfunc usrFunc(pktData);
-    printf("===========================PACKET CAPTURE===============================\n\n");
+    //printf("===========================PACKET CAPTURE===============================\n\n");
     memset(&(usrFunc.exPkt),0,sizeof(usrFunc.exPkt));
     //usrFunc.test_viewFunc(listMan1);
     //make reference
@@ -101,6 +101,10 @@ void pktPassWay::pktFilter(uint8_t *pktData,listload& listMan1,dbmanage& wipsDB1
                 case(8):
                 {
                     usrFunc.getCurPktData(listMan1);
+                    if(usrFunc.doFlag == true){
+                        break;
+                    }
+                    printf("===========================PACKET CAPTURE===============================\n\n");
                     int aa;
                     usrFunc.macCmp(listMan1);
                     usrFunc.adhocFunc(listMan1);
