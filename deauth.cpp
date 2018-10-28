@@ -1,52 +1,48 @@
 #include "deauth.h"
 
-
 deauth::deauth()
 {
 
 }
-void deauth::main_deauth(char * devName = "wlan0")
-{
-    char errbuf[PCAP_ERRBUF_SIZE];
-    pcap_t * packHandle = pcap_open_live(devName, BUFSIZ, 1, 300, errbuf);
 
-    //deAuth_pkt*[]; packet uint8_t array
-
-    //pcap_sendpacket(packHandle,packet_pointer,packet_size)
-}
-
-void deauth::send_deauth(uint8_t*addr1,uint8_t*addr2,int objPkt)
+void deauth::testFunc11(listload& listMan,dbmanage& wipsDB,std::mutex& mtx_lock1)
 {
-    create_pack(addr1, addr2, objPkt);
-}
-void deauth::create_pack(uint8_t* client, uint8_t*ap,int objPkt)
-{
-    dpack.mgmt.fC.version = 0;
-    dpack.mgmt.fC.type = 0;
-    dpack.mgmt.fC.subtype = 12;
-    dpack.mgmt.fC.flags = 0;
-    dpack.mgmt.duration = 0;
-    if (objPkt == Client){
-        std::memcpy(dpack.mgmt.dstAdr,client,6);
-        std::memcpy(dpack.mgmt.srcAdr,ap,6);
-    }else{
-        std::memcpy(dpack.mgmt.srcAdr,client,6);
-        std::memcpy(dpack.mgmt.dstAdr,ap,6);
+    printf("deauth testFunc\n");
+    char tempbuf[250] = {0,};
+    char chanbuf[250] = {0,};
+    //std::mutex mtx_lock;
+
+    listload::bw_list::iterator it;
+    printf("CHECK fakeAp\n\n");
+    while(1){
+         mtx_lock1.lock();
+         for(it = listMan.BlackList.begin();it !=listMan.BlackList.end();it++){
+            //printf("view func first %d\n",it->first);
+            bwDatas = (listload::bwList)it->second;
+            deauthInfo.channel = bwDatas.channel;
+            deauthInfo.blockStat = bwDatas.blockStat;
+            if(deauthInfo.blockStat == 1 ){
+                memcpy(&(deauthInfo.stMac),&(bwDatas.stMac),6);
+                memcpy(&(deauthInfo.apMac),&(bwDatas.apMac),6);
+            }else if(deauthInfo.blockStat == 0){
+                memcpy(&(deauthInfo.apMac),&(bwDatas.apMac),6);
+                memset(&(deauthInfo.stMac),0,6);
+
+            }
+            sprintf(chanbuf,"sudo iwconfig wlan3 channel %d",deauthInfo.channel);
+            int ret1 = system(chanbuf);
+            sprintf(tempbuf,"aireplay-ng -0 20 -a %02X:%02X:%02X:%02X:%02X:%02X wlan3",deauthInfo.apMac[0],deauthInfo.apMac[1],deauthInfo.apMac[2],deauthInfo.apMac[3],deauthInfo.apMac[4],deauthInfo.apMac[5]);
+            int ret2 = system(tempbuf);
+            //--ignore-negative-one
+
+        memset(&(tempbuf[0]),0,250);
+        memset(&(chanbuf[0]),0,250);
+        }
+         mtx_lock1.unlock();
+         sleep(0.01);
     }
-    std::memcpy(dpack.mgmt.bssid,ap,6);
-    dpack.mgmt.seqCtl = 0;
-    dpack.code =1;
-    dpack.fcs = 0;
-            
-    return;
-}
-
-
-void deauth::send_pack(void)
-{
 
 }
-//char* deauth::ret_deauth(void)
-//{
-//    return (char*)(&this->pack);
-//}
+
+
+

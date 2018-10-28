@@ -12,7 +12,7 @@ SOURCES += \
     dbmanage.cpp \
     main.cpp \
     mac.cpp \
-    deauth.cpp
+    deauth.cpp \
 
 
 HEADERS += \
@@ -26,9 +26,10 @@ HEADERS += \
     deauth.h \
     aaa.h \
     wonsang.h \
-    bbb.h
+    bbb.h \
+    deauth.h
 LIBS += -lpcap
 LIBS +=-lmysqlclient
-
+LIBS +=-lpthread
 
 

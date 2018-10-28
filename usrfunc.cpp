@@ -110,6 +110,7 @@ void usrfunc::fakeAp(listload& listMan2)
          printf("\ndisordered!(FAKE AP)\n\n");
          storFlag = true;
          char tempbuf[250] = {0,};
+
          sprintf(tempbuf,"%s FAKEAP",atkType);
          sprintf(atkType,"%s",tempbuf);
          //start function(structure write and throw map,db)
